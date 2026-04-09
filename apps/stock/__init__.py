@@ -1,0 +1,1 @@
+# App Stock pour la gestion des mouvements de stock

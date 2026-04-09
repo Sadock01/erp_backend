@@ -1,0 +1,797 @@
+{
+	"info": {
+		"_postman_id": "baobab-permissions-api",
+		"name": "Baobab Permissions API",
+		"description": "Collection complète pour l'API Permissions du CRM-ERP Baobab",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test",
+			"item": [
+				{
+					"name": "Test Permissions API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/test/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "test", ""]
+						},
+						"description": "Test simple de l'API Permissions"
+					}
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "List Roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/roles/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "roles", ""]
+						},
+						"description": "Lister tous les rôles"
+					}
+				},
+				{
+					"name": "Create Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Sales Manager\",\n  \"description\": \"Gestionnaire des ventes\",\n  \"level\": 1,\n  \"color\": \"#28a745\",\n  \"icon\": \"fas fa-chart-line\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/permissions/roles/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "roles", ""]
+						},
+						"description": "Créer un nouveau rôle"
+					}
+				},
+				{
+					"name": "Get Role by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/roles/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "roles", "1", ""]
+						},
+						"description": "Récupérer un rôle par ID"
+					}
+				},
+				{
+					"name": "Update Role",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Sales Manager\",\n  \"description\": \"Gestionnaire des ventes - Mise à jour\",\n  \"level\": 1,\n  \"color\": \"#28a745\",\n  \"icon\": \"fas fa-chart-line\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/permissions/roles/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "roles", "1", ""]
+						},
+						"description": "Mettre à jour un rôle"
+					}
+				},
+				{
+					"name": "Delete Role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/roles/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "roles", "1", ""]
+						},
+						"description": "Supprimer un rôle"
+					}
+				},
+				{
+					"name": "Active Roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/roles/active/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "roles", "active", ""]
+						},
+						"description": "Lister uniquement les rôles actifs"
+					}
+				},
+				{
+					"name": "System Roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/roles/system/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "roles", "system", ""]
+						},
+						"description": "Lister uniquement les rôles système"
+					}
+				},
+				{
+					"name": "Role Permissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/roles/1/permissions/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "roles", "1", "permissions", ""]
+						},
+						"description": "Lister les permissions d'un rôle"
+					}
+				},
+				{
+					"name": "Assign Permission to Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"permission_id\": 1,\n  \"granted\": true,\n  \"conditions\": {},\n  \"notes\": \"Permission accordée pour la gestion des ventes\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/permissions/roles/1/assign_permission/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "roles", "1", "assign_permission", ""]
+						},
+						"description": "Assigner une permission à un rôle"
+					}
+				}
+			]
+		},
+		{
+			"name": "Permissions",
+			"item": [
+				{
+					"name": "List Permissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/permissions/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "permissions", ""]
+						},
+						"description": "Lister toutes les permissions"
+					}
+				},
+				{
+					"name": "Create Permission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Gérer les rapports\",\n  \"codename\": \"reports_manage\",\n  \"description\": \"Gestion complète des rapports\",\n  \"app_label\": \"reports\",\n  \"action\": \"manage\",\n  \"resource\": \"report\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/permissions/permissions/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "permissions", ""]
+						},
+						"description": "Créer une nouvelle permission"
+					}
+				},
+				{
+					"name": "Get Permission by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/permissions/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "permissions", "1", ""]
+						},
+						"description": "Récupérer une permission par ID"
+					}
+				},
+				{
+					"name": "Update Permission",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Gérer les rapports\",\n  \"codename\": \"reports_manage\",\n  \"description\": \"Gestion complète des rapports - Mise à jour\",\n  \"app_label\": \"reports\",\n  \"action\": \"manage\",\n  \"resource\": \"report\",\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/permissions/permissions/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "permissions", "1", ""]
+						},
+						"description": "Mettre à jour une permission"
+					}
+				},
+				{
+					"name": "Delete Permission",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/permissions/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "permissions", "1", ""]
+						},
+						"description": "Supprimer une permission"
+					}
+				},
+				{
+					"name": "Permissions by App",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/permissions/by_app/?app=customers",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "permissions", "by_app", ""],
+							"query": [
+								{
+									"key": "app",
+									"value": "customers"
+								}
+							]
+						},
+						"description": "Lister les permissions par application"
+					}
+				},
+				{
+					"name": "Active Permissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/permissions/active/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "permissions", "active", ""]
+						},
+						"description": "Lister uniquement les permissions actives"
+					}
+				}
+			]
+		},
+		{
+			"name": "User Roles",
+			"item": [
+				{
+					"name": "List User Roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/user-roles/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "user-roles", ""]
+						},
+						"description": "Lister tous les rôles d'utilisateurs"
+					}
+				},
+				{
+					"name": "Assign Role to User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": 1,\n  \"role\": 2,\n  \"expires_at\": \"2024-12-31T23:59:59Z\",\n  \"notes\": \"Rôle temporaire pour un projet\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/permissions/user-roles/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "user-roles", ""]
+						},
+						"description": "Assigner un rôle à un utilisateur"
+					}
+				},
+				{
+					"name": "Get User Role by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/user-roles/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "user-roles", "1", ""]
+						},
+						"description": "Récupérer un rôle d'utilisateur par ID"
+					}
+				},
+				{
+					"name": "Update User Role",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user\": 1,\n  \"role\": 2,\n  \"expires_at\": \"2024-12-31T23:59:59Z\",\n  \"is_active\": true,\n  \"notes\": \"Rôle temporaire pour un projet - Mise à jour\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/permissions/user-roles/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "user-roles", "1", ""]
+						},
+						"description": "Mettre à jour un rôle d'utilisateur"
+					}
+				},
+				{
+					"name": "Delete User Role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/user-roles/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "user-roles", "1", ""]
+						},
+						"description": "Supprimer un rôle d'utilisateur"
+					}
+				},
+				{
+					"name": "Active User Roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/user-roles/active/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "user-roles", "active", ""]
+						},
+						"description": "Lister uniquement les rôles actifs"
+					}
+				},
+				{
+					"name": "Expired User Roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/user-roles/expired/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "user-roles", "expired", ""]
+						},
+						"description": "Lister les rôles expirés"
+					}
+				},
+				{
+					"name": "Bulk Assign Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_ids\": [1, 2, 3],\n  \"role_id\": 2,\n  \"expires_at\": \"2024-12-31T23:59:59Z\",\n  \"notes\": \"Assignation en masse pour un projet\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/permissions/user-roles/bulk_assign/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "user-roles", "bulk_assign", ""]
+						},
+						"description": "Assigner un rôle à plusieurs utilisateurs"
+					}
+				},
+				{
+					"name": "Extend User Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"expires_at\": \"2024-12-31T23:59:59Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/permissions/user-roles/1/extend/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "user-roles", "1", "extend", ""]
+						},
+						"description": "Prolonger un rôle"
+					}
+				},
+				{
+					"name": "Deactivate User Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/user-roles/1/deactivate/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "user-roles", "1", "deactivate", ""]
+						},
+						"description": "Désactiver un rôle"
+					}
+				}
+			]
+		},
+		{
+			"name": "Permission Logs",
+			"item": [
+				{
+					"name": "List Permission Logs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/logs/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "logs", ""]
+						},
+						"description": "Lister tous les logs de permissions"
+					}
+				},
+				{
+					"name": "Get Permission Log by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/logs/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "logs", "1", ""]
+						},
+						"description": "Récupérer un log de permission par ID"
+					}
+				},
+				{
+					"name": "Logs by User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/logs/by_user/?user_id=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "logs", "by_user", ""],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Lister les logs par utilisateur"
+					}
+				},
+				{
+					"name": "Logs by Action",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/logs/by_action/?action=role_assigned",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "logs", "by_action", ""],
+							"query": [
+								{
+									"key": "action",
+									"value": "role_assigned"
+								}
+							]
+						},
+						"description": "Lister les logs par action"
+					}
+				},
+				{
+					"name": "Recent Logs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/logs/recent/?days=7",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "logs", "recent", ""],
+							"query": [
+								{
+									"key": "days",
+									"value": "7"
+								}
+							]
+						},
+						"description": "Lister les logs récents"
+					}
+				}
+			]
+		},
+		{
+			"name": "Special Endpoints",
+			"item": [
+				{
+					"name": "User Permissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/user-permissions/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "user-permissions", "1", ""]
+						},
+						"description": "Récupérer les permissions d'un utilisateur"
+					}
+				},
+				{
+					"name": "Permission Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/permissions/stats/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "permissions", "stats", ""]
+						},
+						"description": "Récupérer les statistiques des permissions"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "fb0bb5b3b77e0397ce38d4d077aa21b7b9d632cb",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,906 @@
+{
+	"info": {
+		"_postman_id": "baobab-stock-api",
+		"name": "Baobab Stock API",
+		"description": "Collection complète pour l'API Stock du CRM-ERP Baobab",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test",
+			"item": [
+				{
+					"name": "Test Stock API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/stock/test/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "test", ""]
+						},
+						"description": "Test simple de l'API Stock"
+					}
+				}
+			]
+		},
+		{
+			"name": "Stock Movements",
+			"item": [
+				{
+					"name": "List Movements",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", ""]
+						},
+						"description": "Lister tous les mouvements de stock"
+					}
+				},
+				{
+					"name": "Create Movement - Purchase",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"variant\": 1,\n  \"movement_type\": \"purchase\",\n  \"quantity\": 50,\n  \"unit_cost\": \"600.00\",\n  \"reference\": \"PO-2024-001\",\n  \"notes\": \"Commande d'achat iPhone 15\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", ""]
+						},
+						"description": "Créer un mouvement d'achat"
+					}
+				},
+				{
+					"name": "Create Movement - Sale",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"variant\": 1,\n  \"movement_type\": \"sale\",\n  \"quantity\": -5,\n  \"unit_cost\": \"999.99\",\n  \"reference\": \"SO-2024-001\",\n  \"notes\": \"Vente iPhone 15\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", ""]
+						},
+						"description": "Créer un mouvement de vente"
+					}
+				},
+				{
+					"name": "Get Movement by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", "1", ""]
+						},
+						"description": "Récupérer un mouvement par ID"
+					}
+				},
+				{
+					"name": "Update Movement",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"variant\": 1,\n  \"movement_type\": \"purchase\",\n  \"quantity\": 75,\n  \"unit_cost\": \"580.00\",\n  \"reference\": \"PO-2024-001-UPDATED\",\n  \"notes\": \"Commande d'achat iPhone 15 - Mise à jour\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", "1", ""]
+						},
+						"description": "Mettre à jour un mouvement"
+					}
+				},
+				{
+					"name": "Entries Only",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/entries/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", "entries", ""]
+						},
+						"description": "Lister uniquement les entrées de stock"
+					}
+				},
+				{
+					"name": "Exits Only",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/exits/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", "exits", ""]
+						},
+						"description": "Lister uniquement les sorties de stock"
+					}
+				},
+				{
+					"name": "Pending Approval",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/pending_approval/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", "pending_approval", ""]
+						},
+						"description": "Lister les mouvements en attente d'approbation"
+					}
+				},
+				{
+					"name": "Approve Movement",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/1/approve/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", "1", "approve", ""]
+						},
+						"description": "Approuver un mouvement de stock"
+					}
+				},
+				{
+					"name": "Reject Movement",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/1/reject/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", "1", "reject", ""]
+						},
+						"description": "Rejeter un mouvement de stock"
+					}
+				},
+				{
+					"name": "Movements Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/summary/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", "summary", ""]
+						},
+						"description": "Résumé des mouvements de stock"
+					}
+				},
+				{
+					"name": "Filter by Product",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/?product=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", ""],
+							"query": [
+								{
+									"key": "product",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Filtrer les mouvements par produit"
+					}
+				},
+				{
+					"name": "Filter by Date Range",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/movements/?date_from=2024-01-01&date_to=2024-01-31",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "movements", ""],
+							"query": [
+								{
+									"key": "date_from",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "date_to",
+									"value": "2024-01-31"
+								}
+							]
+						},
+						"description": "Filtrer les mouvements par période"
+					}
+				}
+			]
+		},
+		{
+			"name": "Stock Adjustments",
+			"item": [
+				{
+					"name": "List Adjustments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/adjustments/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "adjustments", ""]
+						},
+						"description": "Lister tous les ajustements de stock"
+					}
+				},
+				{
+					"name": "Create Adjustment - Inventory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"variant\": 1,\n  \"adjustment_type\": \"inventory\",\n  \"quantity_before\": 45,\n  \"quantity_after\": 50,\n  \"reason\": \"Ajustement après inventaire\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/adjustments/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "adjustments", ""]
+						},
+						"description": "Créer un ajustement d'inventaire"
+					}
+				},
+				{
+					"name": "Create Adjustment - Damage",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"variant\": 1,\n  \"adjustment_type\": \"damage\",\n  \"quantity_before\": 50,\n  \"quantity_after\": 48,\n  \"reason\": \"Produit endommagé lors du transport\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/adjustments/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "adjustments", ""]
+						},
+						"description": "Créer un ajustement pour dégâts"
+					}
+				},
+				{
+					"name": "Get Adjustment by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/adjustments/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "adjustments", "1", ""]
+						},
+						"description": "Récupérer un ajustement par ID"
+					}
+				},
+				{
+					"name": "Update Adjustment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"variant\": 1,\n  \"adjustment_type\": \"inventory\",\n  \"quantity_before\": 45,\n  \"quantity_after\": 52,\n  \"reason\": \"Ajustement après inventaire - Correction\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/adjustments/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "adjustments", "1", ""]
+						},
+						"description": "Mettre à jour un ajustement"
+					}
+				},
+				{
+					"name": "Pending Approval",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/adjustments/pending_approval/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "adjustments", "pending_approval", ""]
+						},
+						"description": "Lister les ajustements en attente d'approbation"
+					}
+				},
+				{
+					"name": "Approve Adjustment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/adjustments/1/approve/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "adjustments", "1", "approve", ""]
+						},
+						"description": "Approuver un ajustement de stock"
+					}
+				},
+				{
+					"name": "Reject Adjustment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/adjustments/1/reject/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "adjustments", "1", "reject", ""]
+						},
+						"description": "Rejeter un ajustement de stock"
+					}
+				},
+				{
+					"name": "Adjustments Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/adjustments/summary/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "adjustments", "summary", ""]
+						},
+						"description": "Résumé des ajustements de stock"
+					}
+				}
+			]
+		},
+		{
+			"name": "Stock Alerts",
+			"item": [
+				{
+					"name": "List Alerts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/alerts/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "alerts", ""]
+						},
+						"description": "Lister toutes les alertes de stock"
+					}
+				},
+				{
+					"name": "Create Alert - Low Stock",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"variant\": 1,\n  \"alert_type\": \"low_stock\",\n  \"current_quantity\": 5,\n  \"threshold_quantity\": 10,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/alerts/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "alerts", ""]
+						},
+						"description": "Créer une alerte de stock bas"
+					}
+				},
+				{
+					"name": "Create Alert - Out of Stock",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"variant\": 1,\n  \"alert_type\": \"out_of_stock\",\n  \"current_quantity\": 0,\n  \"threshold_quantity\": 1,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/alerts/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "alerts", ""]
+						},
+						"description": "Créer une alerte de rupture de stock"
+					}
+				},
+				{
+					"name": "Get Alert by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/alerts/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "alerts", "1", ""]
+						},
+						"description": "Récupérer une alerte par ID"
+					}
+				},
+				{
+					"name": "Update Alert",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"variant\": 1,\n  \"alert_type\": \"low_stock\",\n  \"current_quantity\": 8,\n  \"threshold_quantity\": 15,\n  \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/alerts/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "alerts", "1", ""]
+						},
+						"description": "Mettre à jour une alerte"
+					}
+				},
+				{
+					"name": "Active Alerts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/alerts/active/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "alerts", "active", ""]
+						},
+						"description": "Lister uniquement les alertes actives"
+					}
+				},
+				{
+					"name": "Resolved Alerts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/alerts/resolved/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "alerts", "resolved", ""]
+						},
+						"description": "Lister uniquement les alertes résolues"
+					}
+				},
+				{
+					"name": "Resolve Alert",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/alerts/1/resolve/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "alerts", "1", "resolve", ""]
+						},
+						"description": "Résoudre une alerte de stock"
+					}
+				},
+				{
+					"name": "Alerts Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/alerts/summary/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "alerts", "summary", ""]
+						},
+						"description": "Résumé des alertes de stock"
+					}
+				}
+			]
+		},
+		{
+			"name": "Stock Reports",
+			"item": [
+				{
+					"name": "List Reports",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/reports/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "reports", ""]
+						},
+						"description": "Lister tous les rapports de stock"
+					}
+				},
+				{
+					"name": "Create Report - Inventory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"report_type\": \"inventory\",\n  \"title\": \"Rapport d'inventaire mensuel\",\n  \"description\": \"Rapport d'inventaire pour janvier 2024\",\n  \"date_from\": \"2024-01-01\",\n  \"date_to\": \"2024-01-31\",\n  \"filters\": {\n    \"category\": 1,\n    \"status\": \"active\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/reports/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "reports", ""]
+						},
+						"description": "Créer un rapport d'inventaire"
+					}
+				},
+				{
+					"name": "Create Report - Movements",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"report_type\": \"movements\",\n  \"title\": \"Rapport des mouvements hebdomadaire\",\n  \"description\": \"Rapport des mouvements pour la semaine du 15-21 janvier 2024\",\n  \"date_from\": \"2024-01-15\",\n  \"date_to\": \"2024-01-21\",\n  \"filters\": {\n    \"movement_type\": \"purchase\",\n    \"is_approved\": true\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/reports/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "reports", ""]
+						},
+						"description": "Créer un rapport des mouvements"
+					}
+				},
+				{
+					"name": "Get Report by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/reports/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "reports", "1", ""]
+						},
+						"description": "Récupérer un rapport par ID"
+					}
+				},
+				{
+					"name": "Update Report",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"report_type\": \"inventory\",\n  \"title\": \"Rapport d'inventaire mensuel - Mise à jour\",\n  \"description\": \"Rapport d'inventaire pour janvier 2024 - Version finale\",\n  \"date_from\": \"2024-01-01\",\n  \"date_to\": \"2024-01-31\",\n  \"filters\": {\n    \"category\": 1,\n    \"status\": \"active\",\n    \"include_variants\": true\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/stock/reports/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "reports", "1", ""]
+						},
+						"description": "Mettre à jour un rapport"
+					}
+				},
+				{
+					"name": "Generate Report",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/reports/1/generate/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "reports", "1", "generate", ""]
+						},
+						"description": "Générer un rapport de stock"
+					}
+				},
+				{
+					"name": "Reports Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/stock/reports/summary/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "stock", "reports", "summary", ""]
+						},
+						"description": "Résumé des rapports de stock"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "fb0bb5b3b77e0397ce38d4d077aa21b7b9d632cb",
+			"type": "string"
+		}
+	]
+}

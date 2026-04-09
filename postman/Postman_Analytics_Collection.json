@@ -1,0 +1,498 @@
+{
+	"info": {
+		"_postman_id": "analytics-api-collection",
+		"name": "Baobab ERP - Analytics API",
+		"description": "Collection complète pour l'API Analytics du système Baobab ERP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Analytics Principal",
+			"item": [
+				{
+					"name": "Données Complètes - 30 jours",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/?period=30d",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "30d"
+								}
+							]
+						},
+						"description": "Récupérer toutes les données analytics pour les 30 derniers jours"
+					}
+				},
+				{
+					"name": "Données Complètes - 7 jours",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/?period=7d",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "7d"
+								}
+							]
+						},
+						"description": "Récupérer toutes les données analytics pour les 7 derniers jours"
+					}
+				},
+				{
+					"name": "Données Complètes - 90 jours",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/?period=90d",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "90d"
+								}
+							]
+						},
+						"description": "Récupérer toutes les données analytics pour les 90 derniers jours"
+					}
+				},
+				{
+					"name": "Données Complètes - 1 an",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/?period=1y",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "1y"
+								}
+							]
+						},
+						"description": "Récupérer toutes les données analytics pour l'année"
+					}
+				},
+				{
+					"name": "Données Complètes - Période Personnalisée",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/?period=custom&custom_start_date=2024-01-01&custom_end_date=2024-01-31",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "custom"
+								},
+								{
+									"key": "custom_start_date",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "custom_end_date",
+									"value": "2024-01-31"
+								}
+							]
+						},
+						"description": "Récupérer toutes les données analytics pour une période personnalisée"
+					}
+				},
+				{
+					"name": "Données Complètes - Filtres Avancés",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/?period=30d&customer_segment=vip&product_category=electronics&revenue_min=1000000&revenue_max=5000000",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "30d"
+								},
+								{
+									"key": "customer_segment",
+									"value": "vip"
+								},
+								{
+									"key": "product_category",
+									"value": "electronics"
+								},
+								{
+									"key": "revenue_min",
+									"value": "1000000"
+								},
+								{
+									"key": "revenue_max",
+									"value": "5000000"
+								}
+							]
+						},
+						"description": "Récupérer les données analytics avec filtres avancés"
+					}
+				}
+			]
+		},
+		{
+			"name": "KPIs",
+			"item": [
+				{
+					"name": "KPIs - 30 jours",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/kpis/?period=30d",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "kpis", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "30d"
+								}
+							]
+						},
+						"description": "Récupérer uniquement les KPIs pour les 30 derniers jours"
+					}
+				},
+				{
+					"name": "KPIs - 7 jours",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/kpis/?period=7d",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "kpis", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "7d"
+								}
+							]
+						},
+						"description": "Récupérer uniquement les KPIs pour les 7 derniers jours"
+					}
+				}
+			]
+		},
+		{
+			"name": "Graphiques",
+			"item": [
+				{
+					"name": "Graphique Revenus - 30 jours",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/revenue-chart/?period=30d",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "revenue-chart", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "30d"
+								}
+							]
+						},
+						"description": "Récupérer les données du graphique des revenus"
+					}
+				},
+				{
+					"name": "Performance Ventes - 30 jours",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/sales-performance/?period=30d",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "sales-performance", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "30d"
+								}
+							]
+						},
+						"description": "Récupérer les données de performance des ventes par catégorie"
+					}
+				}
+			]
+		},
+		{
+			"name": "Tableaux",
+			"item": [
+				{
+					"name": "Top Clients - 30 jours",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/top-customers/?period=30d",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "top-customers", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "30d"
+								}
+							]
+						},
+						"description": "Récupérer le classement des meilleurs clients"
+					}
+				},
+				{
+					"name": "Top Clients - VIP",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/top-customers/?period=30d&customer_segment=vip",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "top-customers", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "30d"
+								},
+								{
+									"key": "customer_segment",
+									"value": "vip"
+								}
+							]
+						},
+						"description": "Récupérer le classement des clients VIP"
+					}
+				},
+				{
+					"name": "Top Produits - 30 jours",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/top-products/?period=30d",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "top-products", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "30d"
+								}
+							]
+						},
+						"description": "Récupérer le classement des meilleurs produits"
+					}
+				},
+				{
+					"name": "Top Produits - Électronique",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/top-products/?period=30d&product_category=electronics",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "top-products", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "30d"
+								},
+								{
+									"key": "product_category",
+									"value": "electronics"
+								}
+							]
+						},
+						"description": "Récupérer le classement des produits électroniques"
+					}
+				}
+			]
+		},
+		{
+			"name": "Tests d'Erreur",
+			"item": [
+				{
+					"name": "Période Invalide",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/?period=invalid",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "invalid"
+								}
+							]
+						},
+						"description": "Tester la gestion d'erreur pour une période invalide"
+					}
+				},
+				{
+					"name": "Période Custom Sans Dates",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/?period=custom",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "custom"
+								}
+							]
+						},
+						"description": "Tester la gestion d'erreur pour une période custom sans dates"
+					}
+				},
+				{
+					"name": "Sans Authentification",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/?period=30d",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", ""],
+							"query": [
+								{
+									"key": "period",
+									"value": "30d"
+								}
+							]
+						},
+						"description": "Tester l'accès sans authentification"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "98176308ef8e4683cb42940e2b8e2b9305a69919",
+			"type": "string"
+		}
+	]
+}

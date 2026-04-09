@@ -1,0 +1,721 @@
+{
+	"info": {
+		"_postman_id": "baobab-erp-alerts-notifications",
+		"name": "Baobab ERP - Alerts & Notifications APIs",
+		"description": "Collection complète pour tester les APIs d'alertes et notifications du dashboard Baobab ERP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Dashboard - Alerts",
+			"item": [
+				{
+					"name": "Get All Alerts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/alerts/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"alerts",
+								""
+							]
+						},
+						"description": "Récupère toutes les alertes du dashboard avec pagination"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/dashboard/alerts/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"dashboard",
+										"alerts",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"type\": \"stock_alert\",\n      \"title\": \"Stock faible\",\n      \"message\": \"Le produit iPhone 15 Pro Max est en rupture de stock\",\n      \"priority\": \"high\",\n      \"is_read\": false,\n      \"created_at\": \"2024-01-15T10:30:00Z\",\n      \"action_url\": \"/inventory/products/1\",\n      \"action_label\": \"Voir le produit\"\n    },\n    {\n      \"id\": 2,\n      \"type\": \"overdue_invoice\",\n      \"title\": \"Facture en retard\",\n      \"message\": \"La facture INV-000001 est en retard de 5 jours\",\n      \"priority\": \"medium\",\n      \"is_read\": false,\n      \"created_at\": \"2024-01-14T15:45:00Z\",\n      \"action_url\": \"/sales/invoices/1\",\n      \"action_label\": \"Voir la facture\"\n    }\n  ],\n  \"summary\": {\n    \"total\": 15,\n    \"unread_count\": 8,\n    \"high_priority\": 3,\n    \"medium_priority\": 7,\n    \"low_priority\": 5\n  },\n  \"message\": \"Alertes récupérées avec succès\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Alerts with Pagination",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/alerts/?page=1&limit=5&priority=high&unread_only=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"alerts",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Numéro de page (défaut: 1)"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Nombre d'éléments par page (défaut: 10)"
+								},
+								{
+									"key": "priority",
+									"value": "high",
+									"description": "Filtrer par priorité (high, medium, low)"
+								},
+								{
+									"key": "unread_only",
+									"value": "true",
+									"description": "Afficher seulement les alertes non lues"
+								}
+							]
+						},
+						"description": "Récupère les alertes avec pagination et filtres"
+					}
+				},
+				{
+					"name": "Mark Alert as Read",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"is_read\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/alerts/1/mark-read/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"alerts",
+								"1",
+								"mark-read",
+								""
+							]
+						},
+						"description": "Marque une alerte comme lue"
+					}
+				},
+				{
+					"name": "Mark All Alerts as Read",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/alerts/mark-all-read/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"alerts",
+								"mark-all-read",
+								""
+							]
+						},
+						"description": "Marque toutes les alertes comme lues"
+					}
+				},
+				{
+					"name": "Delete Alert",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/alerts/1/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"alerts",
+								"1",
+								""
+							]
+						},
+						"description": "Supprime une alerte"
+					}
+				}
+			]
+		},
+		{
+			"name": "Dashboard - Notifications",
+			"item": [
+				{
+					"name": "Get All Notifications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/notifications/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"notifications",
+								""
+							]
+						},
+						"description": "Récupère toutes les notifications du dashboard"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/dashboard/notifications/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"dashboard",
+										"notifications",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"type\": \"order_created\",\n      \"title\": \"Nouvelle commande\",\n      \"message\": \"Une nouvelle commande ORD-000001 a été créée par Jean Dupont\",\n      \"priority\": \"medium\",\n      \"is_read\": false,\n      \"created_at\": \"2024-01-15T14:30:00Z\",\n      \"action_url\": \"/sales/orders/1\",\n      \"action_label\": \"Voir la commande\"\n    },\n    {\n      \"id\": 2,\n      \"type\": \"payment_received\",\n      \"title\": \"Paiement reçu\",\n      \"message\": \"Un paiement de 150,000 FCFA a été reçu pour la facture INV-000001\",\n      \"priority\": \"high\",\n      \"is_read\": false,\n      \"created_at\": \"2024-01-15T16:45:00Z\",\n      \"action_url\": \"/sales/payments/1\",\n      \"action_label\": \"Voir le paiement\"\n    }\n  ],\n  \"summary\": {\n    \"total\": 25,\n    \"unread_count\": 12,\n    \"high_priority\": 5,\n    \"medium_priority\": 15,\n    \"low_priority\": 5\n  },\n  \"message\": \"Notifications récupérées avec succès\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Notifications with Filters",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/notifications/?page=1&limit=10&type=order_created&priority=high&unread_only=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"notifications",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Numéro de page"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Nombre d'éléments par page"
+								},
+								{
+									"key": "type",
+									"value": "order_created",
+									"description": "Type de notification (order_created, payment_received, etc.)"
+								},
+								{
+									"key": "priority",
+									"value": "high",
+									"description": "Priorité (high, medium, low)"
+								},
+								{
+									"key": "unread_only",
+									"value": "true",
+									"description": "Afficher seulement les notifications non lues"
+								}
+							]
+						},
+						"description": "Récupère les notifications avec filtres"
+					}
+				},
+				{
+					"name": "Mark Notification as Read",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"is_read\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/notifications/1/mark-read/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"notifications",
+								"1",
+								"mark-read",
+								""
+							]
+						},
+						"description": "Marque une notification comme lue"
+					}
+				},
+				{
+					"name": "Mark All Notifications as Read",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/notifications/mark-all-read/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"notifications",
+								"mark-all-read",
+								""
+							]
+						},
+						"description": "Marque toutes les notifications comme lues"
+					}
+				},
+				{
+					"name": "Delete Notification",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/notifications/1/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"notifications",
+								"1",
+								""
+							]
+						},
+						"description": "Supprime une notification"
+					}
+				}
+			]
+		},
+		{
+			"name": "Dashboard - Recent Orders",
+			"item": [
+				{
+					"name": "Get Recent Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/recent-orders/?limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"recent-orders",
+								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Nombre de commandes à récupérer (défaut: 10)"
+								}
+							]
+						},
+						"description": "Récupère les commandes récentes du dashboard"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/dashboard/recent-orders/?limit=10",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"dashboard",
+										"recent-orders",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": \"ORD-000001\",\n      \"customer\": \"Jean Dupont\",\n      \"amount\": 150000.00,\n      \"status\": \"confirmed\",\n      \"date\": \"2024-01-15T14:30:00Z\",\n      \"currency\": \"FCFA\"\n    },\n    {\n      \"id\": \"ORD-000002\",\n      \"customer\": \"Marie Martin\",\n      \"amount\": 75000.00,\n      \"status\": \"delivered\",\n      \"date\": \"2024-01-15T12:15:00Z\",\n      \"currency\": \"FCFA\"\n    }\n  ],\n  \"summary\": {\n    \"total\": 150,\n    \"total_amount\": 2500000.00,\n    \"status_breakdown\": {\n      \"confirmed\": 45,\n      \"delivered\": 80,\n      \"shipped\": 15,\n      \"pending\": 8,\n      \"cancelled\": 2\n    }\n  },\n  \"message\": \"Commandes récentes récupérées avec succès\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Dashboard - Recent Invoices",
+			"item": [
+				{
+					"name": "Get Recent Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dashboard/recent-invoices/?limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"recent-invoices",
+								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Nombre de factures à récupérer (défaut: 10)"
+								}
+							]
+						},
+						"description": "Récupère les factures récentes du dashboard"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/dashboard/recent-invoices/?limit=10",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"dashboard",
+										"recent-invoices",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": \"INV-000001\",\n      \"customer\": \"Jean Dupont\",\n      \"amount\": 150000.00,\n      \"status\": \"paid\",\n      \"date\": \"2024-01-15T14:30:00Z\",\n      \"currency\": \"FCFA\"\n    },\n    {\n      \"id\": \"INV-000002\",\n      \"customer\": \"Marie Martin\",\n      \"amount\": 75000.00,\n      \"status\": \"overdue\",\n      \"date\": \"2024-01-10T12:15:00Z\",\n      \"currency\": \"FCFA\"\n    }\n  ],\n  \"summary\": {\n    \"total\": 120,\n    \"total_amount\": 1800000.00,\n    \"status_breakdown\": {\n      \"paid\": 80,\n      \"overdue\": 25,\n      \"pending\": 15\n    }\n  },\n  \"message\": \"Factures récentes récupérées avec succès\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login",
+								""
+							]
+						},
+						"description": "Connexion pour obtenir le token d'authentification"
+					},
+					"response": [
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/auth/login/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": true,\n  \"data\": {\n    \"token\": \"abc123def456ghi789\",\n    \"user\": {\n      \"id\": 1,\n      \"username\": \"admin\",\n      \"email\": \"admin@test.com\",\n      \"first_name\": \"Admin\",\n      \"last_name\": \"User\"\n    }\n  },\n  \"message\": \"Connexion réussie\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string",
+			"description": "URL de base de l'API (changez pour ngrok si nécessaire)"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string",
+			"description": "Token d'authentification (obtenu via login)"
+		}
+	]
+}

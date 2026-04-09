@@ -1,0 +1,639 @@
+{
+	"info": {
+		"_postman_id": "baobab-inventory-api",
+		"name": "Baobab Inventory API",
+		"description": "Collection complète pour l'API Inventory du CRM-ERP Baobab",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test",
+			"item": [
+				{
+					"name": "Test Inventory API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/test/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "test", ""]
+						},
+						"description": "Test simple de l'API Inventory"
+					}
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "List Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/categories/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "categories", ""]
+						},
+						"description": "Lister toutes les catégories"
+					}
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Électronique\",\n  \"description\": \"Appareils électroniques et gadgets\",\n  \"parent\": null,\n  \"is_active\": true,\n  \"sort_order\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/inventory/categories/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "categories", ""]
+						},
+						"description": "Créer une nouvelle catégorie"
+					}
+				},
+				{
+					"name": "Get Category by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/categories/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "categories", "1", ""]
+						},
+						"description": "Récupérer une catégorie par ID"
+					}
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Électronique Modifiée\",\n  \"description\": \"Appareils électroniques et gadgets - Mise à jour\",\n  \"parent\": null,\n  \"is_active\": true,\n  \"sort_order\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/inventory/categories/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "categories", "1", ""]
+						},
+						"description": "Mettre à jour une catégorie"
+					}
+				},
+				{
+					"name": "Active Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/categories/active/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "categories", "active", ""]
+						},
+						"description": "Lister uniquement les catégories actives"
+					}
+				},
+				{
+					"name": "Category Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/categories/1/products/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "categories", "1", "products", ""]
+						},
+						"description": "Récupérer les produits d'une catégorie"
+					}
+				},
+				{
+					"name": "Search Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/categories/?search=électronique",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "categories", ""],
+							"query": [
+								{
+									"key": "search",
+									"value": "électronique"
+								}
+							]
+						},
+						"description": "Rechercher des catégories"
+					}
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "List Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/products/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "products", ""]
+						},
+						"description": "Lister tous les produits"
+					}
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"iPhone 15\",\n  \"description\": \"Dernier iPhone d'Apple avec puce A17 Pro\",\n  \"short_description\": \"iPhone 15 128GB\",\n  \"sku\": \"IPH15-128\",\n  \"barcode\": \"1234567890123\",\n  \"category\": 1,\n  \"product_type\": \"variable\",\n  \"status\": \"active\",\n  \"price\": \"999.99\",\n  \"cost_price\": \"600.00\",\n  \"weight\": \"0.174\",\n  \"dimensions\": \"147.6 x 71.6 x 7.8 mm\",\n  \"is_digital\": false,\n  \"is_featured\": true,\n  \"tags\": \"smartphone, apple, ios, 5g\",\n  \"meta_title\": \"iPhone 15 - Apple Store\",\n  \"meta_description\": \"Découvrez le nouvel iPhone 15 avec puce A17 Pro\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/inventory/products/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "products", ""]
+						},
+						"description": "Créer un nouveau produit"
+					}
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/products/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "products", "1", ""]
+						},
+						"description": "Récupérer un produit par ID"
+					}
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"iPhone 15 Pro\",\n  \"description\": \"iPhone 15 Pro avec puce A17 Pro et caméra 48MP\",\n  \"short_description\": \"iPhone 15 Pro 256GB\",\n  \"sku\": \"IPH15-128\",\n  \"barcode\": \"1234567890123\",\n  \"category\": 1,\n  \"product_type\": \"variable\",\n  \"status\": \"active\",\n  \"price\": \"1199.99\",\n  \"cost_price\": \"700.00\",\n  \"weight\": \"0.187\",\n  \"dimensions\": \"146.6 x 70.6 x 8.25 mm\",\n  \"is_digital\": false,\n  \"is_featured\": true,\n  \"tags\": \"smartphone, apple, ios, 5g, pro\",\n  \"meta_title\": \"iPhone 15 Pro - Apple Store\",\n  \"meta_description\": \"Découvrez l'iPhone 15 Pro avec puce A17 Pro\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/inventory/products/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "products", "1", ""]
+						},
+						"description": "Mettre à jour un produit"
+					}
+				},
+				{
+					"name": "Active Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/products/active/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "products", "active", ""]
+						},
+						"description": "Lister uniquement les produits actifs"
+					}
+				},
+				{
+					"name": "Featured Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/products/featured/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "products", "featured", ""]
+						},
+						"description": "Lister les produits vedettes"
+					}
+				},
+				{
+					"name": "Search Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/products/search/?q=iphone",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "products", "search", ""],
+							"query": [
+								{
+									"key": "q",
+									"value": "iphone"
+								}
+							]
+						},
+						"description": "Rechercher des produits"
+					}
+				},
+				{
+					"name": "Filter Products by Category",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/products/?category=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "products", ""],
+							"query": [
+								{
+									"key": "category",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Filtrer les produits par catégorie"
+					}
+				},
+				{
+					"name": "Filter Products by Price Range",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/products/?min_price=500&max_price=1500",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "products", ""],
+							"query": [
+								{
+									"key": "min_price",
+									"value": "500"
+								},
+								{
+									"key": "max_price",
+									"value": "1500"
+								}
+							]
+						},
+						"description": "Filtrer les produits par fourchette de prix"
+					}
+				},
+				{
+					"name": "Filter Featured Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/products/?is_featured=true",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "products", ""],
+							"query": [
+								{
+									"key": "is_featured",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Filtrer les produits vedettes"
+					}
+				},
+				{
+					"name": "Product Variants",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/products/1/variants/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "products", "1", "variants", ""]
+						},
+						"description": "Récupérer les variants d'un produit"
+					}
+				}
+			]
+		},
+		{
+			"name": "Variants",
+			"item": [
+				{
+					"name": "List Variants",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/variants/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "variants", ""]
+						},
+						"description": "Lister tous les variants"
+					}
+				},
+				{
+					"name": "Create Variant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"name\": \"Rouge - 128GB\",\n  \"sku\": \"IPH15-128-RED\",\n  \"variant_type\": \"color\",\n  \"value\": \"Rouge\",\n  \"price_modifier\": \"0.00\",\n  \"stock_quantity\": 50,\n  \"min_stock_level\": 5,\n  \"max_stock_level\": 100,\n  \"is_active\": true,\n  \"sort_order\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/inventory/variants/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "variants", ""]
+						},
+						"description": "Créer un nouveau variant"
+					}
+				},
+				{
+					"name": "Create Size Variant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"name\": \"256GB - Rouge\",\n  \"sku\": \"IPH15-256-RED\",\n  \"variant_type\": \"size\",\n  \"value\": \"256GB\",\n  \"price_modifier\": \"200.00\",\n  \"stock_quantity\": 25,\n  \"min_stock_level\": 3,\n  \"max_stock_level\": 50,\n  \"is_active\": true,\n  \"sort_order\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/inventory/variants/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "variants", ""]
+						},
+						"description": "Créer un variant de taille"
+					}
+				},
+				{
+					"name": "Get Variant by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/variants/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "variants", "1", ""]
+						},
+						"description": "Récupérer un variant par ID"
+					}
+				},
+				{
+					"name": "Update Variant",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"product\": 1,\n  \"name\": \"Rouge - 128GB (Mise à jour)\",\n  \"sku\": \"IPH15-128-RED\",\n  \"variant_type\": \"color\",\n  \"value\": \"Rouge\",\n  \"price_modifier\": \"50.00\",\n  \"stock_quantity\": 75,\n  \"min_stock_level\": 10,\n  \"max_stock_level\": 150,\n  \"is_active\": true,\n  \"sort_order\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/inventory/variants/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "variants", "1", ""]
+						},
+						"description": "Mettre à jour un variant"
+					}
+				},
+				{
+					"name": "Filter Variants by Product",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/variants/?product=1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "variants", ""],
+							"query": [
+								{
+									"key": "product",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Filtrer les variants par produit"
+					}
+				},
+				{
+					"name": "Filter Variants by Type",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/variants/?variant_type=color",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "variants", ""],
+							"query": [
+								{
+									"key": "variant_type",
+									"value": "color"
+								}
+							]
+						},
+						"description": "Filtrer les variants par type"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "fb0bb5b3b77e0397ce38d4d077aa21b7b9d632cb",
+			"type": "string"
+		}
+	]
+}

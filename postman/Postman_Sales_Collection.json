@@ -1,0 +1,1142 @@
+{
+	"info": {
+		"_postman_id": "baobab-sales-api-complete",
+		"name": "Baobab Sales API - Complete",
+		"description": "Collection complète pour l'API Sales du CRM-ERP Baobab",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test",
+			"item": [
+				{
+					"name": "Test Sales API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sales/test/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "test", ""]
+						},
+						"description": "Test simple de l'API Sales"
+					}
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "List Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", ""]
+						},
+						"description": "Lister toutes les commandes"
+					}
+				},
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": 1,\n  \"status\": \"pending\",\n  \"order_date\": \"2024-01-15T10:30:00Z\",\n  \"delivery_date\": \"2024-01-20T10:30:00Z\",\n  \"tax_rate\": \"20.00\",\n  \"discount_rate\": \"5.00\",\n  \"notes\": \"Commande urgente\",\n  \"internal_notes\": \"Client VIP\",\n  \"items\": [\n    {\n      \"product\": 1,\n      \"variant\": 1,\n      \"quantity\": 2,\n      \"unit_price\": \"999.99\",\n      \"discount_rate\": \"0.00\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", ""]
+						},
+						"description": "Créer une nouvelle commande"
+					}
+				},
+				{
+					"name": "Get Order by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "1", ""]
+						},
+						"description": "Récupérer une commande par ID"
+					}
+				},
+				{
+					"name": "Update Order",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": 1,\n  \"status\": \"confirmed\",\n  \"order_date\": \"2024-01-15T10:30:00Z\",\n  \"delivery_date\": \"2024-01-20T10:30:00Z\",\n  \"tax_rate\": \"20.00\",\n  \"discount_rate\": \"5.00\",\n  \"notes\": \"Commande urgente - Mise à jour\",\n  \"internal_notes\": \"Client VIP - Confirmé\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "1", ""]
+						},
+						"description": "Mettre à jour une commande"
+					}
+				},
+				{
+					"name": "Pending Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/pending/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "pending", ""]
+						},
+						"description": "Lister uniquement les commandes en attente"
+					}
+				},
+				{
+					"name": "Confirmed Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/confirmed/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "confirmed", ""]
+						},
+						"description": "Lister uniquement les commandes confirmées"
+					}
+				},
+				{
+					"name": "Shipped Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/shipped/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "shipped", ""]
+						},
+						"description": "Lister uniquement les commandes expédiées"
+					}
+				},
+				{
+					"name": "Delivered Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/delivered/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "delivered", ""]
+						},
+						"description": "Lister uniquement les commandes livrées"
+					}
+				},
+				{
+					"name": "Cancelled Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/cancelled/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "cancelled", ""]
+						},
+						"description": "Lister uniquement les commandes annulées"
+					}
+				},
+				{
+					"name": "Confirm Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/1/confirm/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "1", "confirm", ""]
+						},
+						"description": "Confirmer une commande"
+					}
+				},
+				{
+					"name": "Ship Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/1/ship/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "1", "ship", ""]
+						},
+						"description": "Marquer une commande comme expédiée"
+					}
+				},
+				{
+					"name": "Deliver Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/1/deliver/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "1", "deliver", ""]
+						},
+						"description": "Marquer une commande comme livrée"
+					}
+				},
+				{
+					"name": "Cancel Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/1/cancel/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "1", "cancel", ""]
+						},
+						"description": "Annuler une commande"
+					}
+				},
+				{
+					"name": "Orders Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/orders/summary/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "orders", "summary", ""]
+						},
+						"description": "Résumé des commandes"
+					}
+				}
+			]
+		},
+		{
+			"name": "Order Items",
+			"item": [
+				{
+					"name": "List Order Items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/order-items/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "order-items", ""]
+						},
+						"description": "Lister tous les articles de commande"
+					}
+				},
+				{
+					"name": "Create Order Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"order\": 1,\n  \"product\": 1,\n  \"variant\": 1,\n  \"quantity\": 2,\n  \"unit_price\": \"999.99\",\n  \"discount_rate\": \"5.00\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sales/order-items/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "order-items", ""]
+						},
+						"description": "Créer un nouvel article de commande"
+					}
+				},
+				{
+					"name": "Get Order Item by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/order-items/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "order-items", "1", ""]
+						},
+						"description": "Récupérer un article de commande par ID"
+					}
+				},
+				{
+					"name": "Update Order Item",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"order\": 1,\n  \"product\": 1,\n  \"variant\": 1,\n  \"quantity\": 3,\n  \"unit_price\": \"999.99\",\n  \"discount_rate\": \"10.00\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sales/order-items/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "order-items", "1", ""]
+						},
+						"description": "Mettre à jour un article de commande"
+					}
+				},
+				{
+					"name": "Delete Order Item",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/order-items/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "order-items", "1", ""]
+						},
+						"description": "Supprimer un article de commande"
+					}
+				}
+			]
+		},
+		{
+			"name": "Invoices",
+			"item": [
+				{
+					"name": "List Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/invoices/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "invoices", ""]
+						},
+						"description": "Lister toutes les factures"
+					}
+				},
+				{
+					"name": "Create Invoice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"order\": 1,\n  \"status\": \"draft\",\n  \"invoice_date\": \"2024-01-15T11:00:00Z\",\n  \"due_date\": \"2024-02-15T11:00:00Z\",\n  \"notes\": \"Facture pour commande urgente\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sales/invoices/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "invoices", ""]
+						},
+						"description": "Créer une nouvelle facture"
+					}
+				},
+				{
+					"name": "Get Invoice by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/invoices/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "invoices", "1", ""]
+						},
+						"description": "Récupérer une facture par ID"
+					}
+				},
+				{
+					"name": "Update Invoice",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"order\": 1,\n  \"status\": \"sent\",\n  \"invoice_date\": \"2024-01-15T11:00:00Z\",\n  \"due_date\": \"2024-02-15T11:00:00Z\",\n  \"notes\": \"Facture envoyée\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sales/invoices/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "invoices", "1", ""]
+						},
+						"description": "Mettre à jour une facture"
+					}
+				},
+				{
+					"name": "Draft Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/invoices/draft/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "invoices", "draft", ""]
+						},
+						"description": "Lister uniquement les factures en brouillon"
+					}
+				},
+				{
+					"name": "Sent Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/invoices/sent/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "invoices", "sent", ""]
+						},
+						"description": "Lister uniquement les factures envoyées"
+					}
+				},
+				{
+					"name": "Paid Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/invoices/paid/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "invoices", "paid", ""]
+						},
+						"description": "Lister uniquement les factures payées"
+					}
+				},
+				{
+					"name": "Overdue Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/invoices/overdue/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "invoices", "overdue", ""]
+						},
+						"description": "Lister uniquement les factures en retard"
+					}
+				},
+				{
+					"name": "Send Invoice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/invoices/1/send/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "invoices", "1", "send", ""]
+						},
+						"description": "Envoyer une facture"
+					}
+				},
+				{
+					"name": "Mark Invoice as Paid",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/invoices/1/mark_paid/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "invoices", "1", "mark_paid", ""]
+						},
+						"description": "Marquer une facture comme payée"
+					}
+				},
+				{
+					"name": "Invoices Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/invoices/summary/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "invoices", "summary", ""]
+						},
+						"description": "Résumé des factures"
+					}
+				}
+			]
+		},
+		{
+			"name": "Proforma Invoices",
+			"item": [
+				{
+					"name": "List Proforma Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", ""]
+						},
+						"description": "Lister tous les devis"
+					}
+				},
+				{
+					"name": "Create Proforma Invoice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": 1,\n  \"status\": \"draft\",\n  \"proforma_date\": \"2024-01-15T09:00:00Z\",\n  \"valid_until\": \"2024-01-30T09:00:00Z\",\n  \"subtotal\": \"999.99\",\n  \"tax_rate\": \"20.00\",\n  \"tax_amount\": \"199.99\",\n  \"total_amount\": \"1199.99\",\n  \"notes\": \"Devis pour iPhone 15\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", ""]
+						},
+						"description": "Créer un nouveau devis"
+					}
+				},
+				{
+					"name": "Get Proforma Invoice by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", "1", ""]
+						},
+						"description": "Récupérer un devis par ID"
+					}
+				},
+				{
+					"name": "Update Proforma Invoice",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": 1,\n  \"status\": \"sent\",\n  \"proforma_date\": \"2024-01-15T09:00:00Z\",\n  \"valid_until\": \"2024-01-30T09:00:00Z\",\n  \"subtotal\": \"999.99\",\n  \"tax_rate\": \"20.00\",\n  \"tax_amount\": \"199.99\",\n  \"total_amount\": \"1199.99\",\n  \"notes\": \"Devis envoyé\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", "1", ""]
+						},
+						"description": "Mettre à jour un devis"
+					}
+				},
+				{
+					"name": "Draft Proforma Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/draft/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", "draft", ""]
+						},
+						"description": "Lister uniquement les devis en brouillon"
+					}
+				},
+				{
+					"name": "Sent Proforma Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/sent/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", "sent", ""]
+						},
+						"description": "Lister uniquement les devis envoyés"
+					}
+				},
+				{
+					"name": "Accepted Proforma Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/accepted/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", "accepted", ""]
+						},
+						"description": "Lister uniquement les devis acceptés"
+					}
+				},
+				{
+					"name": "Expired Proforma Invoices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/expired/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", "expired", ""]
+						},
+						"description": "Lister uniquement les devis expirés"
+					}
+				},
+				{
+					"name": "Send Proforma Invoice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/1/send/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", "1", "send", ""]
+						},
+						"description": "Envoyer un devis"
+					}
+				},
+				{
+					"name": "Accept Proforma Invoice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/1/accept/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", "1", "accept", ""]
+						},
+						"description": "Accepter un devis"
+					}
+				},
+				{
+					"name": "Reject Proforma Invoice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/1/reject/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", "1", "reject", ""]
+						},
+						"description": "Rejeter un devis"
+					}
+				},
+				{
+					"name": "Proforma Invoices Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/proformas/summary/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "proformas", "summary", ""]
+						},
+						"description": "Résumé des devis"
+					}
+				}
+			]
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "List Payments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/payments/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "payments", ""]
+						},
+						"description": "Lister tous les paiements"
+					}
+				},
+				{
+					"name": "Create Payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"invoice\": 1,\n  \"payment_method\": \"bank_transfer\",\n  \"amount\": \"1199.99\",\n  \"payment_date\": \"2024-01-16T14:30:00Z\",\n  \"reference\": \"VIR-2024-001\",\n  \"notes\": \"Paiement par virement bancaire\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sales/payments/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "payments", ""]
+						},
+						"description": "Créer un nouveau paiement"
+					}
+				},
+				{
+					"name": "Get Payment by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/payments/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "payments", "1", ""]
+						},
+						"description": "Récupérer un paiement par ID"
+					}
+				},
+				{
+					"name": "Update Payment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"invoice\": 1,\n  \"payment_method\": \"bank_transfer\",\n  \"amount\": \"1199.99\",\n  \"payment_date\": \"2024-01-16T14:30:00Z\",\n  \"reference\": \"VIR-2024-001-UPDATED\",\n  \"notes\": \"Paiement par virement bancaire - Mis à jour\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sales/payments/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "payments", "1", ""]
+						},
+						"description": "Mettre à jour un paiement"
+					}
+				},
+				{
+					"name": "Delete Payment",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/payments/1/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "payments", "1", ""]
+						},
+						"description": "Supprimer un paiement"
+					}
+				},
+				{
+					"name": "Payments by Method - Cash",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/payments/by_method/?method=cash",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "payments", "by_method", ""],
+							"query": [
+								{
+									"key": "method",
+									"value": "cash"
+								}
+							]
+						},
+						"description": "Lister les paiements en espèces"
+					}
+				},
+				{
+					"name": "Payments by Method - Bank Transfer",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/payments/by_method/?method=bank_transfer",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "payments", "by_method", ""],
+							"query": [
+								{
+									"key": "method",
+									"value": "bank_transfer"
+								}
+							]
+						},
+						"description": "Lister les paiements par virement bancaire"
+					}
+				},
+				{
+					"name": "Payments by Method - Credit Card",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/payments/by_method/?method=credit_card",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "payments", "by_method", ""],
+							"query": [
+								{
+									"key": "method",
+									"value": "credit_card"
+								}
+							]
+						},
+						"description": "Lister les paiements par carte de crédit"
+					}
+				},
+				{
+					"name": "Payments Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sales/payments/summary/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sales", "payments", "summary", ""]
+						},
+						"description": "Résumé des paiements"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "fb0bb5b3b77e0397ce38d4d077aa21b7b9d632cb",
+			"type": "string"
+		}
+	]
+}
