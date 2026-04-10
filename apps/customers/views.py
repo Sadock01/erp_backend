@@ -472,18 +472,18 @@ def customers_analytics_kpis(request):
                 'required_permission': 'customers_view'
             }, status=status.HTTP_403_FORBIDDEN)
         
-        # Obtenir la company de l'utilisateur (ou None si Super Admin)
-        from apps.permissions.decorators import user_has_permission as check_permission
-        
-        user_company = None
-        if not check_permission(request.user, 'companies_view_all'):
-            try:
-                user_company = request.user.userprofile.company
-            except AttributeError:
-                return Response({
-                    'error': 'Profil utilisateur manquant',
-                    'detail': 'Vous n\'avez pas de profil utilisateur associé'
-                }, status=status.HTTP_403_FORBIDDEN)
+        from apps.common.tenant_scope import (
+            get_user_company_or_all,
+            add_company_filter,
+            is_missing_tenant_profile,
+        )
+
+        user_company = get_user_company_or_all(request.user)
+        if is_missing_tenant_profile(user_company):
+            return Response({
+                'error': 'Profil utilisateur manquant',
+                'detail': 'Vous n\'avez pas de profil utilisateur associé'
+            }, status=status.HTTP_403_FORBIDDEN)
         
         # Récupérer les paramètres
         period = request.GET.get('period', '30d')
@@ -505,13 +505,11 @@ def customers_analytics_kpis(request):
                 }
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # Filtrage par company si nécessaire
+        # Filtrage par company (superuser : pas de filtre ; sinon tenant courant)
         customer_filter = {}
         order_filter = {}
-        
-        if user_company:
-            customer_filter['company'] = user_company
-            order_filter['company'] = user_company
+        add_company_filter(customer_filter, user_company, 'company')
+        add_company_filter(order_filter, user_company, 'company')
         
         # Calculer les KPIs avec filtrage par company
         total_clients = Customer.objects.filter(**customer_filter).count()

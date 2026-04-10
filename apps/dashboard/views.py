@@ -12,25 +12,7 @@ from apps.sales.models import Order, Invoice, OrderItem
 from apps.stock.models import StockMovement, StockAlert
 from apps.inventory.models import Product
 from apps.customers.models import Customer
-from apps.permissions.models import UserRole
-from apps.permissions.decorators import user_has_permission
-
-
-def get_user_company_or_all(user):
-    """
-    Retourne la company de l'utilisateur ou None si Super Admin.
-    Si l'utilisateur est Super Admin (permission companies_view_all), retourne None pour voir toutes les données.
-    """
-    # Si l'utilisateur est un Super Admin avec la permission 'companies_view_all', il voit tout
-    if user_has_permission(user, 'companies_view_all'):
-        return None
-    
-    # Sinon, retourner la company de l'utilisateur
-    try:
-        return user.userprofile.company
-    except AttributeError:
-        # L'utilisateur n'a pas de profil ou d'entreprise associée
-        return None
+from apps.common.tenant_scope import get_user_company_or_all, add_company_filter
 
 
 @api_view(['GET'])
@@ -50,8 +32,7 @@ def dashboard_kpis(request):
         
         # Filtrage par company si nécessaire
         order_filter = {}
-        if user_company:
-            order_filter['company'] = user_company
+        add_company_filter(order_filter, user_company, 'company')
         
         # KPIs Revenue
         revenue_today = Order.objects.filter(
@@ -90,12 +71,10 @@ def dashboard_kpis(request):
         customer_filter = {}
         product_filter = {}
         stock_filter = {}
-        
-        if user_company:
-            invoice_filter['company'] = user_company
-            customer_filter['company'] = user_company
-            product_filter['company'] = user_company
-            stock_filter['company'] = user_company
+        add_company_filter(invoice_filter, user_company, 'company')
+        add_company_filter(customer_filter, user_company, 'company')
+        add_company_filter(product_filter, user_company, 'company')
+        add_company_filter(stock_filter, user_company, 'company')
         
         # KPIs Orders
         orders_total = Order.objects.filter(**order_filter).count()
@@ -199,8 +178,7 @@ def dashboard_sales_chart(request):
         
         # Filtrage par company si nécessaire
         order_filter = {}
-        if user_company:
-            order_filter['company'] = user_company
+        add_company_filter(order_filter, user_company, 'company')
         
         # Si period=month, afficher les 30 derniers jours
         if period == 'month':
@@ -353,8 +331,7 @@ def dashboard_products_chart(request):
         
         # Filtrage par company si nécessaire
         order_filter = {}
-        if user_company:
-            order_filter['company'] = user_company
+        add_company_filter(order_filter, user_company, 'company')
         
         # Calcul de la période
         end_date = timezone.now().date()
@@ -372,8 +349,7 @@ def dashboard_products_chart(request):
             'order__created_at__date__gte': start_date,
             'order__status__in': ['confirmed', 'shipped', 'delivered']
         }
-        if user_company:
-            order_items_filter['order__company'] = user_company
+        add_company_filter(order_items_filter, user_company, 'order__company')
             
         top_products = OrderItem.objects.filter(**order_items_filter).values(
             'product__name',
@@ -399,8 +375,7 @@ def dashboard_products_chart(request):
                 'order__created_at__date__gte': start_date,
                 'order__status__in': ['confirmed', 'shipped', 'delivered']
             }
-            if user_company:
-                product_revenue_filter['order__company'] = user_company
+            add_company_filter(product_revenue_filter, user_company, 'order__company')
                 
             product_revenue = OrderItem.objects.filter(**product_revenue_filter).aggregate(
                 revenue=Sum(F('quantity') * F('unit_price'))
@@ -454,8 +429,7 @@ def dashboard_clients_chart(request):
         
         # Filtrage par company si nécessaire
         customer_filter = {}
-        if user_company:
-            customer_filter['company'] = user_company
+        add_company_filter(customer_filter, user_company, 'company')
         
         # Calcul des catégories de clients
         total_clients = Customer.objects.filter(**customer_filter).count()
@@ -465,8 +439,7 @@ def dashboard_clients_chart(request):
         new_clients_filter = {
             'created_at__date__gte': thirty_days_ago
         }
-        if user_company:
-            new_clients_filter['company'] = user_company
+        add_company_filter(new_clients_filter, user_company, 'company')
         new_clients = Customer.objects.filter(**new_clients_filter).count()
         
         # Clients existants (créés avant les 30 derniers jours)
@@ -474,8 +447,7 @@ def dashboard_clients_chart(request):
         
         # Clients VIP (avec plus de 5 commandes)
         vip_clients_filter = {}
-        if user_company:
-            vip_clients_filter['company'] = user_company
+        add_company_filter(vip_clients_filter, user_company, 'company')
         vip_clients = Customer.objects.filter(**vip_clients_filter).annotate(
             orders_count=Count('order')
         ).filter(orders_count__gte=5).count()
@@ -485,8 +457,7 @@ def dashboard_clients_chart(request):
         inactive_clients_filter = {
             'order__isnull': True
         }
-        if user_company:
-            inactive_clients_filter['company'] = user_company
+        add_company_filter(inactive_clients_filter, user_company, 'company')
         inactive_clients = Customer.objects.filter(**inactive_clients_filter).count()
         
         # Ajustement pour éviter les doublons
@@ -551,11 +522,9 @@ def dashboard_alerts(request):
         stock_filter = {}
         order_filter = {}
         invoice_filter = {}
-        
-        if user_company:
-            stock_filter['company'] = user_company
-            order_filter['company'] = user_company
-            invoice_filter['company'] = user_company
+        add_company_filter(stock_filter, user_company, 'company')
+        add_company_filter(order_filter, user_company, 'company')
+        add_company_filter(invoice_filter, user_company, 'company')
         
         alerts = []
         
@@ -682,8 +651,7 @@ def dashboard_recent_orders(request):
         
         # Filtrage par company si nécessaire
         order_filter = {}
-        if user_company:
-            order_filter['company'] = user_company
+        add_company_filter(order_filter, user_company, 'company')
         
         # Filtrage des commandes
         orders_query = Order.objects.select_related('customer').filter(**order_filter).order_by('-created_at')
@@ -751,8 +719,7 @@ def dashboard_recent_invoices(request):
         
         # Filtrage par company si nécessaire
         invoice_filter = {}
-        if user_company:
-            invoice_filter['company'] = user_company
+        add_company_filter(invoice_filter, user_company, 'company')
         
         # Filtrage des factures
         invoices_query = Invoice.objects.select_related('order__customer', 'user').filter(**invoice_filter).order_by('-created_at')
@@ -867,11 +834,9 @@ def _get_kpis_data(user_company=None):
         order_filter = {}
         customer_filter = {}
         stock_filter = {}
-        
-        if user_company:
-            order_filter['company'] = user_company
-            customer_filter['company'] = user_company
-            stock_filter['company'] = user_company
+        add_company_filter(order_filter, user_company, 'company')
+        add_company_filter(customer_filter, user_company, 'company')
+        add_company_filter(stock_filter, user_company, 'company')
         
         # Commandes
         total_orders = Order.objects.filter(**order_filter).count()
@@ -913,8 +878,7 @@ def _get_sales_chart_data(user_company=None):
         
         # Filtrage par company si nécessaire
         order_filter = {}
-        if user_company:
-            order_filter['company'] = user_company
+        add_company_filter(order_filter, user_company, 'company')
         
         # Données des 30 derniers jours
         end_date = timezone.now()
@@ -996,13 +960,15 @@ def _get_sales_chart_data(user_company=None):
         }
 
 
-def _get_products_chart_data():
+def _get_products_chart_data(user_company=None):
     """Récupère les données du graphique des produits"""
     try:
         from apps.inventory.models import ProductVariant
         from django.db.models import Sum
-        
-        top_products = ProductVariant.objects.annotate(
+
+        pv_filter = {}
+        add_company_filter(pv_filter, user_company, 'company')
+        top_products = ProductVariant.objects.filter(**pv_filter).annotate(
             total_sold=Sum('orderitem__quantity')
         ).filter(total_sold__gt=0).order_by('-total_sold')[:4]
         
@@ -1038,29 +1004,33 @@ def _get_products_chart_data():
         }
 
 
-def _get_clients_chart_data():
+def _get_clients_chart_data(user_company=None):
     """Récupère les données du graphique des clients"""
     try:
         from apps.customers.models import Customer
         from datetime import timedelta
         from django.db.models import Sum
+
+        cf = {}
+        add_company_filter(cf, user_company, 'company')
         
         # Clients nouveaux (derniers 30 jours)
         thirty_days_ago = timezone.now() - timedelta(days=30)
-        new_customers = Customer.objects.filter(created_at__gte=thirty_days_ago).count()
+        new_customers = Customer.objects.filter(created_at__gte=thirty_days_ago, **cf).count()
         
         # Clients existants (créés il y a plus de 30 jours)
-        existing_customers = Customer.objects.filter(created_at__lt=thirty_days_ago).count()
+        existing_customers = Customer.objects.filter(created_at__lt=thirty_days_ago, **cf).count()
         
         # Clients VIP (avec commandes totales > 1000€)
-        vip_customers = Customer.objects.annotate(
+        vip_customers = Customer.objects.filter(**cf).annotate(
             total_spent=Sum('order__total_amount')
         ).filter(total_spent__gt=1000).count()
         
         # Clients inactifs (créés il y a plus de 90 jours sans commande récente)
         ninety_days_ago = timezone.now() - timedelta(days=90)
         inactive_customers = Customer.objects.filter(
-            created_at__lt=ninety_days_ago
+            created_at__lt=ninety_days_ago,
+            **cf
         ).exclude(
             order__created_at__gte=thirty_days_ago
         ).distinct().count()
@@ -1082,13 +1052,16 @@ def _get_clients_chart_data():
         }
 
 
-def _get_alerts_data():
+def _get_alerts_data(user_company=None):
     """Récupère les données des alertes"""
     try:
         from apps.stock.models import StockAlert
-        
+
+        sf = {}
+        add_company_filter(sf, user_company, 'company')
         alerts = StockAlert.objects.filter(
-            current_quantity__lte=F('threshold_quantity')
+            current_quantity__lte=F('threshold_quantity'),
+            **sf
         ).select_related('variant__product')[:10]
         
         alerts_data = []
@@ -1107,10 +1080,12 @@ def _get_alerts_data():
         return []
 
 
-def _get_recent_orders_data():
+def _get_recent_orders_data(user_company=None):
     """Récupère les données des commandes récentes"""
     try:
-        recent_orders = Order.objects.select_related('customer').order_by('-created_at')[:5]
+        of = {}
+        add_company_filter(of, user_company, 'company')
+        recent_orders = Order.objects.filter(**of).select_related('customer').order_by('-created_at')[:5]
         
         orders_data = []
         for order in recent_orders:
@@ -1128,10 +1103,12 @@ def _get_recent_orders_data():
         return []
 
 
-def _get_recent_invoices_data():
+def _get_recent_invoices_data(user_company=None):
     """Récupère les données des factures récentes"""
     try:
-        recent_invoices = Invoice.objects.select_related('order__customer').order_by('-created_at')[:5]
+        invf = {}
+        add_company_filter(invf, user_company, 'company')
+        recent_invoices = Invoice.objects.filter(**invf).select_related('order__customer').order_by('-created_at')[:5]
         
         invoices_data = []
         for invoice in recent_invoices:

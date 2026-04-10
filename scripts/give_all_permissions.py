@@ -43,30 +43,35 @@ def give_all_permissions_to_all_users():
     else:
         print("✅ Rôle Admin existe déjà")
     
-    # Donner toutes les permissions au rôle Admin
+    # Donner toutes les permissions au rôle Admin (granted=True, y compris si la ligne existait avec granted=False)
     permissions_added = 0
     for permission in all_permissions:
-        role_permission, created = RolePermission.objects.get_or_create(
+        _, created = RolePermission.objects.update_or_create(
             role=admin_role,
-            permission=permission
+            permission=permission,
+            defaults={'granted': True},
         )
         if created:
             permissions_added += 1
+
+    print(f"🔗 {permissions_added} nouvelles liaisons RolePermission créées pour le rôle Admin")
+    print(
+        f"📊 Total accordé (granted=True): "
+        f"{RolePermission.objects.filter(role=admin_role, granted=True).count()}"
+    )
     
-    print(f"🔗 {permissions_added} nouvelles permissions ajoutées au rôle Admin")
-    print(f"📊 Total des permissions du rôle Admin: {RolePermission.objects.filter(role=admin_role).count()}")
-    
-    # Donner le rôle Admin à tous les utilisateurs
+    # Donner le rôle Admin à tous les utilisateurs (réactiver is_active si besoin)
     users_updated = 0
     for user in users:
-        user_role, created = UserRole.objects.get_or_create(
+        _, created = UserRole.objects.update_or_create(
             user=user,
-            role=admin_role
+            role=admin_role,
+            defaults={'is_active': True},
         )
         if created:
             users_updated += 1
-    
-    print(f"👤 {users_updated} utilisateurs ont reçu le rôle Admin")
+
+    print(f"👤 {users_updated} nouveaux UserRole Admin créés")
     print(f"📊 Total des utilisateurs avec rôle Admin: {UserRole.objects.filter(role=admin_role).count()}")
     
     print("\n" + "=" * 60)

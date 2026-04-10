@@ -20,23 +20,11 @@ from .serializers import (
     ErrorResponseSerializer
 )
 from apps.permissions.decorators import user_has_permission
-
-
-def get_user_company_or_all(user):
-    """
-    Retourne la company de l'utilisateur ou None si Super Admin.
-    Si l'utilisateur est Super Admin (permission companies_view_all), retourne None pour voir toutes les données.
-    """
-    # Si l'utilisateur est un Super Admin avec la permission 'companies_view_all', il voit tout
-    if user_has_permission(user, 'companies_view_all'):
-        return None
-    
-    # Sinon, retourner la company de l'utilisateur
-    try:
-        return user.userprofile.company
-    except AttributeError:
-        # L'utilisateur n'a pas de profil ou d'entreprise associée
-        return None
+from apps.common.tenant_scope import (
+    get_user_company_or_all,
+    add_company_filter,
+    company_scope_cache_key_fragment,
+)
 
 
 def get_cache_key(params):
@@ -282,10 +270,9 @@ def generate_real_data(start_date, end_date, user_company=None, customer_segment
     customer_filter = {}
     product_filter = {}
     
-    if user_company:
-        order_filter['company'] = user_company
-        customer_filter['company'] = user_company
-        product_filter['company'] = user_company
+    add_company_filter(order_filter, user_company, 'company')
+    add_company_filter(customer_filter, user_company, 'company')
+    add_company_filter(product_filter, user_company, 'company')
     
     # Convertir les dates en datetime pour les requêtes
     start_datetime = timezone.make_aware(datetime.combine(start_date, datetime.min.time()))
@@ -904,7 +891,7 @@ def analytics_main(request):
             'revenue_max': revenue_max,
             'turnover_min': turnover_min,
             'turnover_max': turnover_max,
-            'company_id': user_company.id if user_company else 'all'
+            'company_id': company_scope_cache_key_fragment(user_company)
         }
         cache_key = get_cache_key(cache_params)
         
@@ -967,7 +954,7 @@ def analytics_kpis(request):
             'custom_start_date': custom_start_date,
             'custom_end_date': custom_end_date,
             'type': 'kpis',
-            'company_id': user_company.id if user_company else 'all'
+            'company_id': company_scope_cache_key_fragment(user_company)
         }
         cache_key = get_cache_key(cache_params)
         

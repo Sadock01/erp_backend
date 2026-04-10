@@ -3,6 +3,7 @@ Configuration de base commune à tous les environnements
 """
 from pathlib import Path
 from decouple import config
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -142,4 +143,11 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:4200",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+]
+
+# Headers envoyés par le navigateur sur des requêtes cross-origin : ngrok ajoute
+# souvent ce header côté front pour contourner l’interstitiel ; il doit être
+# listé sinon le préflight OPTIONS échoue (CORS_ALLOW_HEADERS).
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'ngrok-skip-browser-warning',
 ]

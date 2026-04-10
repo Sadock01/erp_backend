@@ -1,30 +1,27 @@
 from rest_framework.response import Response
 from rest_framework import status
-from apps.permissions.decorators import user_has_permission
+
+from apps.common.tenant_scope import get_user_company_or_all, is_missing_tenant_profile
 
 
 class CompanyFilterMixin:
     """
     Mixin pour filtrer automatiquement les données par Company
     """
-    
+
     def get_queryset(self):
         """
-        Filtre le queryset par l'entreprise de l'utilisateur connecté
+        Filtre le queryset par l'entreprise de l'utilisateur connecté.
+        Seul le superuser Django voit toutes les entreprises ; le rôle ERP Admin
+        reste cantonné à sa Company (voir tenant_scope).
         """
         queryset = super().get_queryset()
-        
-        # Super Admin peut voir toutes les entreprises
-        if user_has_permission(self.request.user, 'companies_view_all'):
+        scope = get_user_company_or_all(self.request.user)
+        if scope is None:
             return queryset
-        
-        # Sinon, seulement son entreprise
-        try:
-            user_company = self.request.user.userprofile.company
-            return queryset.filter(company=user_company)
-        except:
-            # Si l'utilisateur n'a pas de profil, retourner un queryset vide
+        if is_missing_tenant_profile(scope):
             return queryset.none()
+        return queryset.filter(company=scope)
     
     def perform_create(self, serializer):
         """

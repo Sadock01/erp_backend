@@ -24,10 +24,9 @@ def user_has_permission(user, permission_codename):
     if not getattr(user, 'is_authenticated', False):
         return False
 
-    # Lecture stock : superuser Django ou rôle ERP « Admin » actif (sans dépendre du lien RolePermission).
-    if permission_codename == 'stock_view':
-        if getattr(user, 'is_superuser', False) or _user_has_active_admin_role(user):
-            return True
+    # Superuser Django ou rôle ERP « Admin » actif : accès complet API métier (RBAC).
+    if getattr(user, 'is_superuser', False) or _user_has_active_admin_role(user):
+        return True
 
     try:
         from apps.permissions.models import Permission, UserRole, RolePermission
