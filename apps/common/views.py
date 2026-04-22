@@ -8,10 +8,20 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.utils import timezone
 from .serializers import (
-    UserSerializer, LoginSerializer, RegisterSerializer, 
-    PasswordResetRequestSerializer, PasswordResetConfirmSerializer,
-    AlertSerializer, AlertCreateSerializer, AlertUpdateSerializer,
-    NotificationSerializer, NotificationCreateSerializer, NotificationUpdateSerializer
+    UserSerializer,
+    UserSelfUpdateSerializer,
+    LoginSerializer,
+    RegisterSerializer,
+    PasswordResetRequestSerializer,
+    PasswordResetConfirmSerializer,
+    CompanySerializer,
+    CompanyMyUpdateSerializer,
+    AlertSerializer,
+    AlertCreateSerializer,
+    AlertUpdateSerializer,
+    NotificationSerializer,
+    NotificationCreateSerializer,
+    NotificationUpdateSerializer,
 )
 from .models import PasswordResetCode, Alert, Notification
 from django.core.paginator import Paginator
@@ -183,7 +193,6 @@ def get_company(request, company_id):
     Nécessite d'être authentifié
     """
     from .models import Company, UserProfile
-    from .serializers import CompanySerializer
     from apps.permissions.decorators import user_has_permission
     
     try:
@@ -209,27 +218,42 @@ def get_company(request, company_id):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PATCH', 'PUT'])
 @permission_classes([IsAuthenticated])
 def get_my_company(request):
     """
-    Récupérer les informations de l'entreprise de l'utilisateur connecté
-    Nécessite d'être authentifié
+    Entreprise liée au UserProfile : GET lecture, PATCH/PUT mise à jour (boutique).
     """
     from .models import UserProfile
-    from .serializers import CompanySerializer
-    
+
     try:
-        user_profile = UserProfile.objects.get(user=request.user)
+        user_profile = UserProfile.objects.select_related('company').get(user=request.user)
         company = user_profile.company
     except UserProfile.DoesNotExist:
         return Response({
             'error': 'Profil non trouvé',
             'detail': 'Vous n\'êtes associé à aucune entreprise'
         }, status=status.HTTP_404_NOT_FOUND)
-    
-    serializer = CompanySerializer(company, context={'request': request})
-    return Response(serializer.data, status=status.HTTP_200_OK)
+
+    if request.method == 'GET':
+        serializer = CompanySerializer(company, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    partial = request.method == 'PATCH'
+    write_serializer = CompanyMyUpdateSerializer(
+        company,
+        data=request.data,
+        partial=partial,
+        context={'request': request},
+    )
+    if write_serializer.is_valid():
+        write_serializer.save()
+        company.refresh_from_db()
+        return Response(
+            CompanySerializer(company, context={'request': request}).data,
+            status=status.HTTP_200_OK,
+        )
+    return Response(write_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -309,14 +333,25 @@ def logout(request):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PATCH', 'PUT'])
 @permission_classes([IsAuthenticated])
 def user_profile(request):
     """
-    Récupérer le profil de l'utilisateur connecté
+    Profil de l'utilisateur connecté : GET lecture, PATCH/PUT mise à jour partielle ou complète.
     """
-    serializer = UserSerializer(request.user)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+    partial = request.method == 'PATCH'
+    serializer = UserSelfUpdateSerializer(
+        request.user,
+        data=request.data,
+        partial=partial,
+    )
+    if serializer.is_valid():
+        serializer.save()
+        return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])

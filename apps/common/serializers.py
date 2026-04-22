@@ -14,6 +14,52 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'date_joined']
 
 
+class UserSelfUpdateSerializer(serializers.ModelSerializer):
+    """
+    Mise à jour du compte par l'utilisateur connecté (PATCH /api/auth/profile/).
+    """
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exclude(pk=self.instance.pk).exists():
+            raise serializers.ValidationError('Cet email est déjà utilisé.')
+        return value
+
+    def update(self, instance, validated_data):
+        if 'email' in validated_data:
+            instance.username = validated_data['email']
+        return super().update(instance, validated_data)
+
+
+class CompanyMyUpdateSerializer(serializers.ModelSerializer):
+    """
+    Mise à jour de l'entreprise courante (PATCH /api/companies/my/).
+    Pas de désactivation du tenant via cette route (pas de champ is_active).
+    """
+
+    class Meta:
+        model = Company
+        fields = [
+            'name',
+            'logo',
+            'primary_color',
+            'description',
+            'email',
+            'phone',
+            'address',
+            'city',
+            'postal_code',
+            'country',
+            'website',
+            'tax_number',
+            'registration_number',
+            'settings',
+        ]
+
+
 class LoginSerializer(serializers.Serializer):
     """
     Serializer pour la connexion avec email

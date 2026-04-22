@@ -50,7 +50,8 @@ Authorization: Token <token>
 ```
 
 ### 1.3 Utilisateur courant
-- **GET** `/api/auth/profile/`
+- **GET** `/api/auth/profile/` — lecture du user courant
+- **PATCH** ou **PUT** `/api/auth/profile/` — mise à jour **self-service** (voir **§1.8**)
 - **Réponse** : objet user (sans enveloppe `success/data`)
 
 ### 1.4 Logout
@@ -126,13 +127,13 @@ Ensuite **`GET /api/companies/my/`** doit renvoyer l’entreprise : le front pou
 |--------|------|
 | **Auth** | `POST /api/auth/login/` → `token` + `user` (champs utilisateur Django de base). **Aucune** préférence UI ni objet `settings` complet dans cette réponse. |
 | **Entreprise (lecture)** | **`GET /api/companies/my/`** (token requis) → objet **Company** : notamment **`primary_color`**, **`settings`** (JSON libre, dictionnaire), **`name`**, **`logo` / `logo_url`**, coordonnées, etc. C’est **la** source serveur documentée pour **personnaliser l’UI par tenant** (couleur marque, clés métier dans `settings`). |
-| **Front Nodus (souvent)** | Beaucoup de réglages vivent encore en **`localStorage`** (ex. thème clair/sombre, langue). Ils **ne passent pas** par l’API → tu peux être « connecté » tout en ayant l’impression que les configs ne sont **pas branchées** : c’est **cohérent** tant que le code front **n’appelle pas** `GET /api/companies/my/` pour **hydrater** l’UI **et** qu’il n’existe **pas** de route d’**écriture** côté backend (voir ci-dessous). |
+| **Front Nodus (souvent)** | Beaucoup de réglages vivent encore en **`localStorage`** (ex. thème clair/sombre, langue). Ils **ne passent pas** par l’API → tu peux être « connecté » tout en ayant l’impression que les configs ne sont **pas branchées** : c’est **cohérent** tant que le code front **n’appelle pas** `GET /api/companies/my/` pour **hydrater** l’UI **et** qu’il n’appelle pas **`PATCH` / `PUT /api/companies/my/`** pour **persister** `settings` / `primary_color` (voir ci-dessous). |
 
-**Écriture / sauvegarde serveur (réalité du backend aujourd’hui)** :
+**Écriture / sauvegarde serveur (réalité du backend)** :
 
-- Les URLs déclarées dans **`apps/common/urls.py`** pour l’entreprise sont en **GET seulement** : **`GET /api/companies/my/`**, **`GET /api/companies/{id}/`**, **`GET /api/companies/`** (liste, permission `companies_view_all`).
-- Il **n’y a pas** dans ce contrat de **`PATCH` / `PUT /api/companies/my/`** (ni d’endpoint **`/preferences`**) pour enregistrer les changements de l’écran configuration vers la base.
-- Conséquence : **brancher l’enregistrement** des réglages sur le serveur = **ajouter une évolution backend** (ex. `PATCH /api/companies/my/` avec validation + permission RBAC), **ou** modifier la company via **l’admin Django** / scripts en attendant.
+- **`PATCH` / `PUT /api/companies/my/`** (token + **`UserProfile`**) : mise à jour de **l’entreprise courante** (champs modifiables : voir **§1.8**). Pas de champ **`is_active`** sur cette route (pas de désactivation du tenant via l’API self-service).
+- Les autres URLs entreprise restent en **lecture** : **`GET /api/companies/{id}/`**, **`GET /api/companies/`** (liste, permission `companies_view_all`).
+- Il **n’existe pas** d’endpoint dédié **`/preferences`** : les préférences UI vivent typiquement dans **`Company.settings`** (JSON) + **`PATCH /api/companies/my/`**.
 
 **Comment « brancher » correctement côté front (lecture — faisable tout de suite)** :
 
@@ -141,7 +142,7 @@ Ensuite **`GET /api/companies/my/`** doit renvoyer l’entreprise : le front pou
    - **`primary_color`** → variable CSS (`--primary`) ou thème du design system ;
    - **`settings`** → objet JSON : conventionner des clés (ex. `theme`, `locale`) **au sein de l’équipe** et les lire pour initialiser le store UI **en plus** ou **à la place** du `localStorage` pour ces clés ;
    - **`name`**, **`logo_url`** pour l’en-tête / marque blanche.
-3. Si tu gardes `localStorage` pour le confort offline : documenter que c’est **priorité locale** vs serveur, ou **fusion** explicite (ex. serveur à l’ouverture de session, puis local jusqu’à prochaine sync — sachant qu’**sans PATCH**, la sync retour serveur des prefs **n’existe pas** encore).
+3. Si tu gardes `localStorage` pour le confort offline : documenter que c’est **priorité locale** vs serveur, ou **fusion** explicite (ex. serveur à l’ouverture de session, puis **`PATCH /api/companies/my/`** pour renvoyer `settings` / `primary_color` au serveur quand l’utilisateur enregistre).
 
 **Exemple (extrait de réponse `GET /api/companies/my/`)** :
 
@@ -158,7 +159,31 @@ Ensuite **`GET /api/companies/my/`** doit renvoyer l’entreprise : le front pou
 }
 ```
 
-> Les clés à l’intérieur de **`settings`** ne sont pas imposées par ce contrat : c’est un **JSON libre** côté modèle `Company` ; l’équipe produit doit **se mettre d’accord** sur le schéma si le front et le futur `PATCH` doivent être alignés.
+> Les clés à l’intérieur de **`settings`** ne sont pas imposées par ce contrat : c’est un **JSON libre** côté modèle `Company` ; l’équipe produit doit **se mettre d’accord** sur le schéma pour que le front et **`PATCH /api/companies/my/`** restent alignés.
+
+### 1.8 Profil utilisateur connecté & infos boutique — lecture et écriture
+
+Cette section répond explicitement : *« Comment connecter le front pour afficher / modifier le profil connecté et les infos de la boutique ? »*
+
+#### Lecture
+
+| Besoin UI | Appel API | Headers | Réponse utile |
+|-----------|-----------|---------|----------------|
+| **Afficher l’utilisateur connecté** (nom, email, etc.) | **`GET /api/auth/profile/`** | `Authorization: Token <token>` | Objet **user** : `id`, `username`, `email`, `first_name`, `last_name`, `is_active`, `date_joined`. |
+| **Afficher la boutique / tenant courant** | **`GET /api/companies/my/`** | idem | Objet **Company** complet (lecture) — voir **§1.7**. |
+
+**Séquence front recommandée (affichage)** : après login → **`GET /api/auth/profile/`** + **`GET /api/companies/my/`** (si **404** sur la company → **§1.6**).
+
+#### Écriture (implémenté)
+
+| Besoin UI | Appel API | Corps (exemples) | Réponse / erreurs |
+|-----------|-----------|------------------|-------------------|
+| **Enregistrer** le profil connecté | **`PATCH`** ou **`PUT`** **`/api/auth/profile/`** | JSON partiel ou complet : **`first_name`**, **`last_name`**, **`email`**. | **200** : même forme que **`GET`** (objet user à jour). **`email`** : unicité vérifiée ; en cas de changement, **`username`** est aligné sur **`email`** (convention identique à l’invitation). **400** : erreurs de validation (ex. email déjà pris). |
+| **Enregistrer** la boutique | **`PATCH`** ou **`PUT`** **`/api/companies/my/`** | Champs acceptés (tous optionnels en **PATCH**) : **`name`**, **`logo`** (fichier en **multipart/form-data** si upload), **`primary_color`**, **`description`**, **`email`**, **`phone`**, **`address`**, **`city`**, **`postal_code`**, **`country`**, **`website`**, **`tax_number`**, **`registration_number`**, **`settings`** (objet JSON). | **200** : objet **Company** complet (même serializer qu’en **GET**). **404** : pas de **`UserProfile`** (**§1.6**). **400** : validation serializer. |
+
+**Non exposé** via ces routes self-service : **`is_active`** du user, **`is_active`** de la **Company** (désactivation tenant), rôles / permissions — utiliser **admin Django** ou **`/api/permissions/users/`** pour l’administration.
+
+**Alternative admin** : un compte avec **`users_manage`** peut toujours utiliser **`PATCH /api/permissions/users/{id}/`** pour modifier un autre utilisateur (ou le sien si l’**`id`** est connu) ; ce n’est pas le flux « page profil » grand public.
 
 ---
 
@@ -279,15 +304,17 @@ Ensuite : connecter le front avec cet **email** / mot de passe → **`GET /api/c
 | Auth | POST | `/auth/register/` | non | — | Inscription + crée company + assigne rôle `Admin` |
 | Auth | POST | `/auth/login/` | non | — | Retourne `{token, user, message}` |
 | Auth | POST | `/auth/logout/` | oui | — | Invalide le token |
-| Auth | GET | `/auth/profile/` | oui | — | User courant |
+| Auth | GET | `/auth/profile/` | oui | — | User courant — **§1.8** |
+| Auth | PATCH, PUT | `/auth/profile/` | oui | — | Mise à jour self-service (`first_name`, `last_name`, `email`) — **§1.8** |
 | Auth | POST | `/auth/refresh-token/` | oui | — | À confirmer comportement |
 | Auth | POST | `/auth/invite-user/` | oui | `users_manage` | Invite un user dans la company |
-| Company | GET | `/companies/my/` | oui | — | Company de l’utilisateur ; **`primary_color`**, **`settings`** (JSON) pour configs UI — **§1.7** |
+| Company | GET | `/companies/my/` | oui | — | Company de l’utilisateur ; **`primary_color`**, **`settings`** — **§1.7** |
+| Company | PATCH, PUT | `/companies/my/` | oui | — | Mise à jour boutique (sans `is_active` company) — **§1.8** |
 | Company | GET | `/companies/{company_id}/` | oui | `companies_view_all` si hors company | Accès restreint |
 | Alerts | GET | `/alerts/` | oui | — | Pagination custom (pas DRF) selon impl |
 | Notifications | GET | `/notifications/` | oui | — | Idem |
 
-> **Mise à jour de l’entreprise ou de `settings` / `primary_color`** : aucune route **`PATCH`/`PUT`** n’est exposée dans **`apps/common/urls.py`** pour `/companies/my/` — **§1.7** (admin Django ou évolution API).
+> **Mise à jour de l’entreprise** : **`PATCH` / `PUT /api/companies/my/`** — **§1.8** (champs modifiables listés là ; pas de désactivation du tenant via cette route).
 
 ### 4.2 Customers (`/customers/` — `apps/customers/views.py`)
 
@@ -611,14 +638,15 @@ Endpoint : **POST** `/api/permissions/users/` ou **POST** `/api/permissions/admi
 
 1. **Login** : `POST /api/auth/login/` → récupérer `token`
 2. **Entreprise** : `GET /api/companies/my/` → récupérer **`id`** (pour **`company_id`**, **§1.6**) **et** **`primary_color` + `settings`** pour hydrater l’UI « configurations » (**§1.7**)
-3. **Profile** : `GET /api/auth/profile/`
-4. **Membres** : `GET /api/permissions/users/?page=1` → si **403** + `required_permission: users_manage`, corriger les **RolePermission** avant de debugger le front
-5. **Rôles** : `GET /api/permissions/roles/` (permission `permissions_roles_view`) pour alimenter les selects `role` / `role_ids`
-6. **Products** : `GET /api/inventory/products/?page=1`
-7. **Customers** : `GET /api/customers/?page=1`
-8. **Orders** : `GET /api/sales/orders/?page=1`
-9. **Stock movements** : `GET /api/stock/movements/?page=1`
-10. **Dashboard** : `GET /api/dashboard/kpis/`
+3. **Profile** : `GET /api/auth/profile/` ; test écriture : **`PATCH /api/auth/profile/`** avec `{"first_name":"…"}` → **200** et user mis à jour (**§1.8**)
+4. **Boutique (écriture)** : **`PATCH /api/companies/my/`** avec par ex. `{"primary_color":"#2E8B57","settings":{"theme":"dark"}}` → **200** (**§1.8**)
+5. **Membres** : `GET /api/permissions/users/?page=1` → si **403** + `required_permission: users_manage`, corriger les **RolePermission** avant de debugger le front
+6. **Rôles** : `GET /api/permissions/roles/` (permission `permissions_roles_view`) pour alimenter les selects `role` / `role_ids`
+7. **Products** : `GET /api/inventory/products/?page=1`
+8. **Customers** : `GET /api/customers/?page=1`
+9. **Orders** : `GET /api/sales/orders/?page=1`
+10. **Stock movements** : `GET /api/stock/movements/?page=1`
+11. **Dashboard** : `GET /api/dashboard/kpis/`
 
 ---
 
@@ -644,8 +672,8 @@ Cette section décrit la **réalité du front Nodus aujourd’hui** (comportemen
 | Alertes dashboard (rupture / critique) | Calculées à partir des **produits déjà chargés** en mémoire. | Le backend expose **`GET /api/dashboard/alerts/`**, **`GET /api/stock/alerts/`** (app stock), et des champs KPI côté **`GET /api/dashboard/kpis/`**. Le front **n’utilise pas** encore ces routes pour cette carte. |
 | « Activité récente » sur le dashboard | Construite à partir des **commandes déjà listées** côté client. | Le backend expose **`GET /api/dashboard/recent-orders/`** (et d’autres blocs dashboard). Pas d’endpoint unique « activity feed » type UX v1 ; soit **brancher** `recent-orders` + autres, soit **nouveau** `GET /activity` si besoin d’un fil unifié. |
 | Membres / équipe | **`localStorage`** (`membres:liste` ou équivalent) : **aucun** appel à `GET /api/permissions/users/`, `POST /api/auth/invite-user/`, etc. | Voir **§4.7** : tout est déjà côté API ; il manque **uniquement le branchement front** + gestion du token et de **`users_manage`**. |
-| Préférences UI (thème, langue, etc.) | **`localStorage`** (`user:preferences` ou équivalent). | **Lecture** : **`GET /api/companies/my/`** expose **`settings`** (JSON) et **`primary_color`** — voir **§1.7** pour brancher l’affichage. **Écriture** : pas de **`PATCH`** company / preferences dans les routes actuelles ; sync serveur = **évolution backend** ou admin Django. |
-| Profil — bouton Enregistrer | **Non branché** : commentaire / TODO côté front (PATCH à faire si l’API existe). | Il n’y a pas aujourd’hui de **`PATCH /api/users/me`** évident dans les routes communes listées ; le profil minimal passe par **`GET /api/auth/profile/`**. **Mise à jour profil** = évolution backend (ex. `PATCH` dédié) + branchement front. |
+| Préférences UI (thème, langue, etc.) | **`localStorage`** (`user:preferences` ou équivalent). | **Lecture** : **`GET /api/companies/my/`** — **§1.7**. **Écriture serveur** : **`PATCH` / `PUT /api/companies/my/`** avec **`settings`** / **`primary_color`** — **§1.8** (le front peut encore choisir local-first + sync explicite). |
+| Profil — bouton Enregistrer | **Non branché** : commentaire / TODO côté front. | **`PATCH` / `PUT /api/auth/profile/`** — **§1.8** (`first_name`, `last_name`, `email`) ; reste à **brancher** l’UI sur cette route. |
 | Historique de statut commande (détail) | Historique **reconstruit côté UI** après actions locales ; **pas** de ressource serveur `status-history`. | Conforme à **§7** : statuts gérés par **actions** (`confirm`, `ship`, `deliver`, `cancel`). Un vrai **`OrderStatusHistory`** côté API = **fonctionnalité à ajouter** si l’on veut la même sémantique que l’UX initiale. |
 
 ### 8.2 Ce que la doc « complète » doit encore couvrir (spécifiquement Nodus)
@@ -655,8 +683,8 @@ Pour considérer la documentation d’intégration **fermée** pour Nodus, il ma
 1. **Courbe stock** : soit contrat d’agrégation (période, granularité, champs), soit convention « le front agrège à partir de `movements` » avec exemples de requêtes.
 2. **Alertes** : quelle source fait foi (`dashboard/alerts`, `stock/alerts`, ou calcul client) et champs exacts de réponse.
 3. **Activité** : liste des endpoints à composer (`recent-orders`, mouvements récents, etc.) ou nouveau endpoint unique.
-4. **Préférences / configuration** : schéma JSON pour **`Company.settings`** + route **`PATCH /api/companies/my/`** (ou équivalent) si sauvegarde serveur requise — aujourd’hui seule la **lecture** via **`GET /companies/my/`** est au contrat (**§1.7**).
-5. **Profil** : route unique de mise à jour (champs modifiables) + exemples d’erreurs.
+4. **Préférences / configuration** : **schéma JSON** pour **`Company.settings`** (convention équipe) — **écriture** : **`PATCH /api/companies/my/`** (**§1.8**).
+5. **Profil** : **`PATCH` / `PUT /api/auth/profile/`** documenté (**§1.8**) ; affiner au besoin (mot de passe, avatar, etc.).
 6. **Historique commande** : soit on **documente définitivement** le modèle « UI only », soit on **spécifie** une table + `GET /orders/{id}/status-history` (ou équivalent).
 
 ### 8.3 Lecture pour l’équipe front
@@ -671,5 +699,5 @@ Tant que les lignes du tableau §8.1 restent en **mock / localStorage**, le **co
 | **Modification produit ne marche pas** | **`PATCH`** `/inventory/products/{id}/` exige **`inventory_update`** (distinct de **`inventory_create`**). | Contrôler **403** + `required_permission` ; compte **Admin** ERP ou superuser bypass ; sinon ajouter **`inventory_update`** au rôle. |
 | **Utilisateurs désactivés toujours dans la liste** | **`GET /permissions/users/`** liste **actifs et inactifs** par défaut. | Utiliser **`?is_active=true`** ou **`GET /permissions/users/active/`** ; rafraîchir après `deactivate`. |
 | **Ajout d’un user : rien n’apparaît** | **201** OK mais UI ne **recharge** pas l’API ; ou données **mock localStorage**. | Après création : **refetch** `GET /permissions/users/?page=…` ; brancher la page membres sur l’API (**§4.7**). |
-| **Impossible de modifier l’utilisateur connecté (profil)** | Il **n’existe pas** de **`PATCH /api/auth/profile/`** dans les routes documentées : seulement **`GET /api/auth/profile/`**. | **Évolution backend** (ex. `PATCH` profil + champs autorisés) + branchement front ; en attendant : **admin Django** ou **`/permissions/users/{id}/`** si tu as **`users_manage`** (ce n’est pas le « self-service » grand public). |
+| **Impossible de modifier l’utilisateur connecté (profil)** | L’UI n’appelle pas encore **`PATCH /api/auth/profile/`**. | **§1.8** : **`PATCH` / `PUT /auth/profile/`** ; vérifier **400** (validation) et **Token** présent. |
 
