@@ -42,15 +42,27 @@ def register(request):
         # Récupérer l'entreprise créée
         company = getattr(user, '_created_company', None)
         
-        # Attribuer automatiquement le rôle Admin
+        # Attribuer automatiquement le rôle Admin (créé par migration permissions.0002)
         try:
             from apps.permissions.models import Role, UserRole
-            admin_role = Role.objects.get(name="Admin")
-            UserRole.objects.create(
+            admin_role, _ = Role.objects.get_or_create(
+                name='Admin',
+                defaults={
+                    'description': 'Administrateur de l’entreprise (accès complet application).',
+                    'is_active': True,
+                    'is_system': True,
+                    'level': 0,
+                    'color': '#dc3545',
+                    'icon': 'fas fa-user-shield',
+                },
+            )
+            UserRole.objects.get_or_create(
                 user=user,
                 role=admin_role,
-                is_active=True,
-                notes='Attribué automatiquement lors de l\'inscription'
+                defaults={
+                    'is_active': True,
+                    'notes': 'Attribué automatiquement lors de l\'inscription',
+                },
             )
         except Exception as e:
             print(f"Erreur lors de l'attribution du rôle Admin: {e}")
