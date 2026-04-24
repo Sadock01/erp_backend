@@ -3,8 +3,8 @@ Configuration pour l'environnement de production
 """
 from .base import *
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG désactivé par défaut ; sur le serveur : DEBUG=False dans .env ou omettre la clé.
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 

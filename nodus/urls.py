@@ -8,10 +8,20 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import JsonResponse
+
+
+def api_root_not_found(request):
+    """Pas de page racine API navigable sur GET /api/."""
+    return JsonResponse({'detail': 'Not found.'}, status=404)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
+
+    # Doit rester avant path('api/', include(...)) : URL exacte /api/ uniquement
+    path('api/', api_root_not_found),
+
     # Authentification
     path('api/', include('apps.common.urls')),
     
