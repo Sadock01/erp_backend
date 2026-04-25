@@ -494,6 +494,7 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
                     # Créer une nouvelle image
                     ProductImage.objects.create(
                         product=instance,
+                        company=instance.company,
                         **image_data
                     )
         
