@@ -243,8 +243,9 @@ class InviteUserSerializer(serializers.Serializer):
         from apps.permissions.models import Role, UserRole
         from .models import Company
         
-        # Générer un mot de passe temporaire
-        temp_password = ''.join(secrets.choices(string.ascii_letters + string.digits, k=12))
+        # Générer un mot de passe temporaire (secrets.choices n'existe pas en stdlib)
+        alphabet = string.ascii_letters + string.digits
+        temp_password = ''.join(secrets.choice(alphabet) for _ in range(12))
         
         # Créer l'utilisateur
         user = User.objects.create_user(

@@ -258,16 +258,46 @@ Les vérifications RBAC métier accordent **toutes** les permissions (y compris 
 
 Le nom du rôle en base doit être **`Admin`** (casse sensible) : ce n’est **pas** le même concept que le flag `is_staff` / accès `/admin/` Django.
 
-### 3.2 Aligner `RolePermission` avec le rôle Admin (données)
-Même avec le bypass ci-dessus, il peut être utile que la table `RolePermission` reflète toutes les permissions pour le rôle Admin (écrans d’audit, futurs exports, cohérence avec d’autres couches). Commande :
+### 3.2 Seed des rôles / permissions via migrations (recommandé)
+
+Le projet contient des migrations de données qui préparent automatiquement :
+
+- les rôles système de base (`Admin`, `User`) ;
+- les permissions (`Permission`) utilisées par les vues ;
+- la matrice `RolePermission` par rôle métier.
+
+Commande à lancer sur chaque environnement :
+
+```bash
+python manage.py migrate
+```
+
+Ensuite, en cas d’ajout futur de nouvelles permissions côté code, tu peux réaligner rapidement le rôle `Admin` :
 
 ```bash
 python manage.py sync_admin_permissions
 ```
 
-Option : `--role AutreNom` si un autre rôle ERP doit recevoir toutes les permissions actives.
+### 3.3 Politique de restrictions par type d’utilisateur (RBAC)
 
-### 3.3 Multi-tenant : une base partagée, isolation par `Company` (comportement actuel)
+La politique appliquée est :
+
+| Rôle | Périmètre |
+|---|---|
+| `Admin` | Toutes les permissions (métier + utilisateurs + rôles + permissions + entreprises globales) |
+| `Manager` | Dashboard, clients, inventaire, stock, ventes, alertes, notifications (toutes actions) |
+| `Inventory Manager` | Inventaire uniquement (`inventory*`) |
+| `Stock Manager` | Stock uniquement (`stock*`) |
+| `Sales Manager` | Ventes uniquement (`sales*`) |
+| `User` | Lecture seule (`action=view`) sur le périmètre métier (dashboard, clients, inventaire, stock, ventes, alertes, notifications) |
+
+Points importants :
+
+- **seul `Admin`** peut gérer les utilisateurs et le RBAC (`users_manage`, `permissions_*`, `roles_*`) ;
+- un `superuser` Django garde aussi un accès total (bypass) ;
+- le `Manager` n’a pas les permissions d’administration des comptes.
+
+### 3.4 Multi-tenant : une base partagée, isolation par `Company` (comportement actuel)
 
 **Question fréquente** : « Pourquoi je vois des clients d’autres entreprises ? Je veux une base vide pour Nodus et un seul compte admin boutique. »
 
@@ -474,7 +504,7 @@ Si ton utilisateur connecté **ne l’a pas** (non liée au rôle dans `RolePerm
 | Liste | GET | `/permissions/roles/` | `permissions_roles_view` |
 | Actifs | GET | `/permissions/roles/active/` | `permissions_roles_view` |
 
-Le champ `role` de **`invite-user`** attend le **nom** du rôle tel qu’en base (ex. `"Admin"`, `"Manager"`, …), pas l’id.
+Le champ `role` de **`invite-user`** attend le **nom** du rôle tel qu’en base (ex. `"Admin"`, `"User"`, `"Manager"`, `"Inventory Manager"`, `"Stock Manager"`, `"Sales Manager"`), pas l’id.
 
 #### Récupérer `company_id` pour une invitation
 | Méthode | Chemin |
